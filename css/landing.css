@@ -3,11 +3,10 @@
    ============================================ */
 
 /* FOUC */
-html.landing-locked body > *:not(#landing-overlay):not(#loading-box) {
+html.landing-locked body > *:not(#landing-overlay):not(#loading-box):not(#landing-loader) {
   visibility: hidden !important; opacity: 0 !important;
 }
-/* loading 框始终可见 */
-#loading-box { z-index: 100000 !important; }
+#loading-box, #landing-loader { z-index: 100000 !important; }
 html.landing-locked body { overflow: hidden; background: #fffef8; }
 
 /* 浮层 */

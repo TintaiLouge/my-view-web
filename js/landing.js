@@ -19,8 +19,8 @@
   if (!isHome) { document.documentElement.classList.remove('landing-locked'); return; }
 
   // ── 配置（图片换为自己的）──────────────
-  var cardImage = 'https://media.prts.wiki/5/5d/Skin_brand_%E7%94%9F%E5%91%BD%E4%B9%8B%E5%9C%B0.png';
-  var brandImage = 'images/covers/iuno-抠图.png';
+  var cardImage = 'images/illustrations/fami_抠图.png';
+  var brandImage = 'https://media.prts.wiki/5/5d/Skin_brand_%E7%94%9F%E5%91%BD%E4%B9%8B%E5%9C%B0.png';
 
   // ── 工具（和原版一样）───────────────────
   var rotate = function (cursorPosition, centerPosition, threshold) {
