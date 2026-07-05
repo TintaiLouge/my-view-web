@@ -38,19 +38,17 @@ body {
 
 /* ---------- 背景 ---------- */
 #web_bg {
-  background: url(images/bg/cerydra.jpg) center/cover fixed no-repeat !important;
-  opacity: 1 !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
 }
 
-/* 暗色遮罩层 */
+/* 暗色遮罩 */
 #web_bg::after {
   content: '';
   position: fixed;
   inset: 0;
-  background:
-    radial-gradient(ellipse at 50% 10%, rgba(90, 130, 230, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 30%, rgba(140, 100, 230, 0.08) 0%, transparent 45%),
-    linear-gradient(rgba(6,11,20,0.8), rgba(6,11,20,0.8));
+  background: linear-gradient(rgba(6,11,20,0.78), rgba(6,11,20,0.78));
   pointer-events: none;
   z-index: 0;
 }
