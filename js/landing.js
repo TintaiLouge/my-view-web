@@ -1,7 +1,7 @@
 /**
  * ============================================
  * JINGYU · Landing Overlay
- * 悬浮卡片开屏逻辑 / 3D 鼠标追踪 / sessionStorage
+ * 3D 透视卡片 / 视差分层 / 投影美学
  * ============================================
  */
 
@@ -10,13 +10,13 @@
 
   var STORAGE_KEY = 'jingyu_entered';
 
-  // ── 已进入过 → 跳过 ───────────────────────
+  // 已进入过 → 跳过
   if (sessionStorage.getItem(STORAGE_KEY) === 'true') {
     document.documentElement.classList.remove('landing-locked');
     return;
   }
 
-  // 仅首页显示开屏
+  // 仅首页显示
   var isHome = (function () {
     try {
       if (typeof GLOBAL_CONFIG_SITE !== 'undefined' &&
@@ -35,60 +35,82 @@
 
   // ── 卡片数据 ──────────────────────────────
   var cardData = [
-    { title: 'Level Design', subtitle: '关卡设计', img: '/images/illustrations/card-1.jpg' },
-    { title: 'System Design', subtitle: '系统架构', img: '/images/illustrations/card-2.jpg' },
-    { title: 'Narrative', subtitle: '叙事体验', img: '/images/illustrations/card-3.jpg' },
-    { title: 'Tools & Craft', subtitle: '设计工具', img: '/images/illustrations/card-4.jpg' },
-    { title: 'Portfolio', subtitle: '作品集', img: '/images/illustrations/card-5.jpg' },
+    { title: '关卡设计', subtitle: 'LEVELDESIGN', badge: '核心能力', img: '/images/illustrations/card-1.jpg' },
+    { title: '系统架构', subtitle: 'SYSTEMDESIGN', badge: '核心能力', img: '/images/illustrations/card-2.jpg' },
+    { title: '叙事体验', subtitle: 'NARRATIVE', badge: '设计方向', img: '/images/illustrations/card-3.jpg' },
+    { title: '设计工具', subtitle: 'TOOLS&CRAFT', badge: '工具箱', img: '/images/illustrations/card-4.jpg' },
+    { title: '作品集', subtitle: 'PORTFOLIO', badge: '成果展示', img: '/images/illustrations/card-5.jpg' },
   ];
 
   // ── 工具 ──────────────────────────────────
-  var clamp = function (v, max) {
-    return Math.max(-max, Math.min(max, v));
+  var rotate = function (cursorPos, centerPos, threshold) {
+    threshold = threshold || 22;
+    var delta = cursorPos - centerPos;
+    return delta >= 0 ?
+      (delta >= threshold ? threshold : delta) :
+      (delta <= -threshold ? -threshold : delta);
   };
+
+  var brightness = function (cursorY, centerY, strength) {
+    strength = strength || 20;
+    return 1 - rotate(cursorY, centerY) / strength * 0.05;
+  };
+
+  var cardCenters = new Map();
 
   // ── 构建浮层 ──────────────────────────────
   function createOverlay() {
     var overlay = document.createElement('div');
     overlay.id = 'landing-overlay';
 
-    // 粒子画布
-    var canvas = document.createElement('canvas');
-    canvas.id = 'landing-particles';
-    overlay.appendChild(canvas);
-
     // 3D 舞台
     var stage = document.createElement('div');
     stage.className = 'landing-stage';
 
     for (var i = 0; i < cardData.length; i++) {
+      var d = cardData[i];
+
+      var container = document.createElement('div');
+      container.className = 'landing-card-container';
+
       var card = document.createElement('div');
       card.className = 'landing-card';
-      card.style.setProperty('--float-delay', (i * 0.85) + 's');
+      card.style.setProperty('--float-delay', (i * 0.7) + 's');
 
-      var img = document.createElement('img');
-      img.className = 'landing-card-img';
-      img.src = cardData[i].img;
-      img.alt = cardData[i].title;
-      img.loading = 'eager';
-      card.appendChild(img);
+      card.innerHTML =
+        '<div class="landing-card-bg"></div>' +
+        // 点阵装饰
+        '<div class="landing-image-area"><div class="landing-dot-pattern"></div></div>' +
+        // 主图
+        '<div class="landing-image-area" style="overflow:inherit;">' +
+        '  <div class="landing-image-main" style="left:0;top:0;filter:none;">' +
+        '    <img src="' + d.img + '" alt="' + d.title + '" loading="eager">' +
+        '  </div>' +
+        '</div>' +
+        // 叠加层（反相）
+        '<div class="landing-overlay-area" style="transform:translateZ(0) scale(1);">' +
+        '  <div class="landing-overlay-img">' +
+        '    <div class="landing-brand-mark">JINGYU</div>' +
+        '  </div>' +
+        '</div>' +
+        // Badge + 阴影
+        '<div class="landing-badge">' + d.badge + '</div>' +
+        '<div class="landing-badge-shadow"></div>' +
+        // 标题
+        '<div class="landing-title">' + d.title + '</div>' +
+        '<div class="landing-subtitle">' + d.subtitle + '</div>';
 
-      var info = document.createElement('div');
-      info.className = 'landing-card-info';
-      info.innerHTML =
-        '<div class="landing-card-title">' + cardData[i].title + '</div>' +
-        '<div class="landing-card-subtitle">' + cardData[i].subtitle + '</div>';
-      card.appendChild(info);
-
+      // 点击进入
       card.addEventListener('click', function () {
         enterSite(overlay);
       });
 
-      stage.appendChild(card);
+      container.appendChild(card);
+      stage.appendChild(container);
     }
     overlay.appendChild(stage);
 
-    // CTA 提示
+    // CTA
     var cta = document.createElement('div');
     cta.className = 'landing-cta';
     cta.innerHTML =
@@ -101,13 +123,10 @@
 
     document.body.appendChild(overlay);
 
-    // 启动粒子
-    initParticles(canvas);
+    // 初始化追踪
+    initTracking();
 
-    // 启动 3D 鼠标追踪
-    initStage3D(stage);
-
-    // 键盘也可进入
+    // 键盘进入
     document.addEventListener('keydown', function onKey(e) {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -117,61 +136,110 @@
     });
   }
 
-  // ── 粒子画布 ──────────────────────────────
-  function initParticles(canvas) {
-    var ctx = canvas.getContext('2d');
-    var w, h;
-    var pts = [];
-    var count = 40;
-
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    for (var i = 0; i < count; i++) {
-      pts.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        r: Math.random() * 2 + 0.5,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: -(Math.random() * 0.4 + 0.15),
-        a: Math.random() * 0.2 + 0.05,
+  // ── 3D 追踪 ──────────────────────────────
+  function updateCenters() {
+    var cards = document.querySelectorAll('.landing-card');
+    for (var i = 0; i < cards.length; i++) {
+      var rect = cards[i].getBoundingClientRect();
+      cardCenters.set(cards[i], {
+        centerX: rect.left + rect.width / 2,
+        centerY: rect.top + rect.height / 2,
       });
     }
-
-    function draw() {
-      ctx.clearRect(0, 0, w, h);
-      for (var i = 0; i < pts.length; i++) {
-        var p = pts[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < -10) p.x = w + 10;
-        if (p.x > w + 10) p.x = -10;
-        if (p.y < -10) p.y = h + 10;
-        if (p.y > h + 10) p.y = -10;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(140,180,255,' + p.a + ')';
-        ctx.fill();
-      }
-      requestAnimationFrame(draw);
-    }
-    draw();
   }
 
-  // ── 3D 鼠标追踪 ────────────────────────────
-  function initStage3D(stage) {
-    document.addEventListener('mousemove', function (e) {
-      var cx = window.innerWidth / 2;
-      var cy = window.innerHeight / 2;
-      var dx = clamp((e.clientX - cx) / cx, 1) * 5;
-      var dy = clamp((e.clientY - cy) / cy, 1) * 4;
-      stage.style.transform =
-        'rotateY(' + dx + 'deg) rotateX(' + (-dy) + 'deg)';
-    });
+  function initTracking() {
+    updateCenters();
+    window.addEventListener('resize', updateCenters);
+
+    // 容器缩放（hover）
+    var containers = document.querySelectorAll('.landing-card-container');
+    for (var c = 0; c < containers.length; c++) {
+      (function (ct) {
+        ct.addEventListener('mouseenter', function () {
+          ct.classList.add('zoomed');
+        });
+        ct.addEventListener('mouseleave', function () {
+          ct.classList.remove('zoomed');
+        });
+      })(containers[c]);
+    }
+
+    // 卡片 3D mousemove
+    var cards = document.querySelectorAll('.landing-card');
+    for (var i = 0; i < cards.length; i++) {
+      (function (card) {
+        card.addEventListener('mouseenter', function () {
+          var rect = card.getBoundingClientRect();
+          cardCenters.set(card, {
+            centerX: rect.left + rect.width / 2,
+            centerY: rect.top + rect.height / 2,
+          });
+
+          // 展开 overlay
+          var overlayArea = card.querySelector('.landing-overlay-area');
+          if (overlayArea) {
+            overlayArea.style.overflow = 'inherit';
+            overlayArea.style.left = '-16px';
+            overlayArea.style.top = '-24px';
+            overlayArea.style.transform = 'scale(0.7)';
+          }
+        });
+
+        card.addEventListener('mouseleave', function () {
+          card.style.transform = 'perspective(500px) scale(1)';
+          card.style.filter = 'drop-shadow(0 6px 8px rgba(0,0,0,0.45))';
+          card.style.boxShadow = '0 0 0 0 rgba(0,0,0,0.2)';
+
+          var imgMain = card.querySelector('.landing-image-main');
+          if (imgMain) { imgMain.style.cssText = 'left:0;top:0;filter:none;'; }
+
+          var overlayArea = card.querySelector('.landing-overlay-area');
+          if (overlayArea) {
+            overlayArea.style.cssText = 'left:0;top:0;filter:none;transform:translateZ(0) scale(1);overflow:hidden;';
+          }
+
+          var overlayImg = card.querySelector('.landing-overlay-img');
+          if (overlayImg) { overlayImg.style.cssText = 'left:0;top:0;'; }
+        });
+
+        card.addEventListener('mousemove', function (e) {
+          var data = cardCenters.get(card);
+          if (!data) return;
+
+          var calcX = rotate(e.clientX, data.centerX);
+          var calcY = rotate(e.clientY, data.centerY);
+          var dx = e.clientX - data.centerX;
+          var dy = e.clientY - data.centerY;
+
+          // 3D 旋转
+          card.style.transform =
+            'translateZ(0) perspective(1000px) rotateY(' + calcX + 'deg) rotateX(' + (-calcY / 1.5) + 'deg)';
+          card.style.filter = 'brightness(' + brightness(e.clientY, data.centerY) + ')';
+          card.style.boxShadow = (-calcX) + 'px ' + (-calcY) + 'px 10px 0 rgba(0,0,20,0.25)';
+
+          // 叠加层视差
+          var overlayImg = card.querySelector('.landing-overlay-img');
+          if (overlayImg) {
+            overlayImg.style.left = (dx / 10) + 'px';
+            overlayImg.style.top = (dy / 15) + 'px';
+          }
+
+          var overlayArea = card.querySelector('.landing-overlay-area');
+          if (overlayArea) {
+            overlayArea.style.filter = 'drop-shadow(' + (-calcX / 7) + 'px ' + (-calcY / 7) + 'px 0 white)';
+          }
+
+          // 主图视差
+          var imgMain = card.querySelector('.landing-image-main');
+          if (imgMain) {
+            imgMain.style.left = (dx / 8) + 'px';
+            imgMain.style.top = (dy / 13) + 'px';
+            imgMain.style.filter = 'drop-shadow(' + (-calcX / 2) + 'px ' + (-calcY / 2) + 'px 5px rgba(0,0,20,0.2))';
+          }
+        });
+      })(cards[i]);
+    }
   }
 
   // ── 进入站点 ──────────────────────────────
@@ -179,14 +247,13 @@
     if (overlay.classList.contains('landing-exit')) return;
     overlay.classList.add('landing-exit');
 
-    // 动画完成后清理
     setTimeout(function () {
       sessionStorage.setItem(STORAGE_KEY, 'true');
       document.documentElement.classList.remove('landing-locked');
       if (overlay.parentNode) {
         overlay.parentNode.removeChild(overlay);
       }
-    }, 800);
+    }, 700);
   }
 
   // ── 启动 ──────────────────────────────────

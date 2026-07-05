@@ -1,6 +1,6 @@
 /* ============================================
    JINGYU · Landing Overlay
-   悬浮卡片开屏 / 3D 透视浮动 / 进入动画
+   3D 透视卡片 / 视差分层 / 投影美学
    ============================================ */
 
 /* ---------- FOUC 防护 ---------- */
@@ -14,7 +14,7 @@ html.landing-locked .bg-particles { visibility: hidden; }
 
 html.landing-locked body {
   overflow: hidden;
-  background: #060b14;
+  background: #fffef8;
 }
 
 /* ---------- 浮层容器 ---------- */
@@ -22,17 +22,17 @@ html.landing-locked body {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background:
-    radial-gradient(ellipse at 50% 30%, rgba(40, 80, 160, 0.12) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 70%, rgba(64, 200, 224, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 20% 60%, rgba(100, 60, 200, 0.05) 0%, transparent 45%),
-    #060b14;
+  background: #fffef8;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  animation: overlayFadeIn 0.6s ease-out;
+  animation: overlayFadeIn 0.5s ease-out;
+  /* 背景纹理 */
+  background-image:
+    radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 @keyframes overlayFadeIn {
@@ -40,206 +40,303 @@ html.landing-locked body {
   to { opacity: 1; }
 }
 
-/* ---------- 粒子画布 ---------- */
-#landing-particles {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-}
-
 /* ---------- 3D 舞台 ---------- */
 .landing-stage {
-  perspective: 1200px;
-  perspective-origin: 50% 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 28px;
+  gap: 0;
   padding: 0 40px;
   z-index: 2;
-  transition: transform 0.15s ease-out;
 }
 
-/* ---------- 浮动卡片 ---------- */
-.landing-card {
+/* ---------- 卡片容器（缩放层） ---------- */
+.landing-card-container {
+  width: 130px;
+  height: 300px;
+  margin: 0 12px;
   position: relative;
-  width: min(16vw, 180px);
-  aspect-ratio: 2.8 / 4;
-  background: rgba(14, 24, 46, 0.65);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 6px;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), z-index 0.45s ease;
+  transform: scale(1);
+  z-index: 0;
+}
+.landing-card-container.zoomed {
+  transform: scale(1.18);
+  z-index: 100;
+}
+
+/* ---------- 卡片主体 ---------- */
+.landing-card {
+  width: 130px;
+  height: 300px;
+  position: relative;
+  background: #fff;
   cursor: pointer;
-  overflow: hidden;
-  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.45s ease,
-              border-color 0.35s ease;
-  animation: cardFloat 7s ease-in-out infinite;
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,0.45));
+  transition: filter 0.15s ease;
+  font-size: 0;
+  animation: cardFloat 6s ease-in-out infinite;
   animation-delay: var(--float-delay, 0s);
-  transform-style: preserve-3d;
   will-change: transform;
 }
-
 .landing-card:hover {
-  transform: scale(1.1) translateY(-16px) !important;
-  box-shadow:
-    0 0 50px rgba(91, 156, 245, 0.25),
-    0 0 100px rgba(64, 200, 224, 0.1),
-    0 24px 60px rgba(0, 0, 0, 0.5);
-  border-color: rgba(110, 168, 254, 0.35);
-  z-index: 100;
   animation-play-state: paused;
 }
 
-/* 卡片图片 */
-.landing-card-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease, filter 0.4s ease;
-  filter: brightness(0.8);
-}
-
-.landing-card:hover .landing-card-img {
-  transform: scale(1.06);
-  filter: brightness(1);
-}
-
-/* 卡片渐变叠加 */
-.landing-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg,
-    transparent 40%,
-    rgba(6, 11, 20, 0.3) 75%,
-    rgba(6, 11, 20, 0.7) 100%);
-  pointer-events: none;
-  z-index: 2;
-  transition: opacity 0.35s;
-}
-
-.landing-card:hover::after {
-  opacity: 0.5;
-}
-
-/* 卡片文字 */
-.landing-card-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 16px 14px;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.landing-card-title {
-  color: #e4ecf7;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  margin-bottom: 3px;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-}
-
-.landing-card-subtitle {
-  color: rgba(180, 200, 230, 0.7);
-  font-size: 0.65rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-/* 卡片边框发光（hover 时 via JS 动态添加） */
-.landing-card.card-glowing {
-  box-shadow:
-    0 0 50px rgba(91, 156, 245, 0.25),
-    0 0 100px rgba(64, 200, 224, 0.15),
-    0 24px 60px rgba(0, 0, 0, 0.5);
-  border-color: rgba(110, 168, 254, 0.35);
-}
-
 @keyframes cardFloat {
-  0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
-  20% { transform: translateY(-10px) rotateX(1.5deg) rotateY(-0.5deg); }
-  40% { transform: translateY(-3px) rotateX(0deg) rotateY(0.5deg); }
-  60% { transform: translateY(-14px) rotateX(-1deg) rotateY(-0.5deg); }
-  80% { transform: translateY(-6px) rotateX(0.5deg) rotateY(0.5deg); }
+  0%, 100% { transform: translateY(0); }
+  25%  { transform: translateY(-8px); }
+  50%  { transform: translateY(-2px); }
+  75%  { transform: translateY(-12px); }
+}
+
+/* 白色底层 */
+.landing-card-bg {
+  position: absolute;
+  inset: 0 0 44px;
+  background: #fff;
+  z-index: 0;
+}
+
+/* ---------- 图片区域 ---------- */
+.landing-image-area {
+  position: absolute;
+  bottom: 44px;
+  left: 0;
+  width: 130px;
+  height: 256px;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.landing-image-main {
+  position: absolute;
+  z-index: 1;
+  transition: left 0.08s ease-out, top 0.08s ease-out, filter 0.08s ease-out;
+}
+
+.landing-image-main img {
+  width: 130px;
+  display: block;
+}
+
+/* ---------- 点阵装饰 ---------- */
+.landing-dot-pattern {
+  position: absolute;
+  right: -40px;
+  bottom: -20px;
+  width: 180px;
+  height: 90px;
+  background-image:
+    radial-gradient(rgba(0,0,0,0.18) 6%, transparent 7%),
+    radial-gradient(rgba(0,0,0,0.18) 12%, transparent 13%),
+    radial-gradient(rgba(0,0,0,0.18) 16%, transparent 17%),
+    radial-gradient(rgba(0,0,0,0.18) 20%, transparent 21%),
+    radial-gradient(rgba(0,0,0,0.18) 25%, transparent 26%),
+    radial-gradient(rgba(0,0,0,0.18) 26%, transparent 27%),
+    radial-gradient(rgba(0,0,0,0.18) 30%, transparent 31%),
+    radial-gradient(rgba(0,0,0,0.18) 32%, transparent 33%),
+    radial-gradient(rgba(0,0,0,0.18) 35%, transparent 36%),
+    radial-gradient(rgba(0,0,0,0.18) 32%, transparent 33%),
+    radial-gradient(rgba(0,0,0,0.18) 35%, transparent 36%),
+    radial-gradient(rgba(0,0,0,0.18) 32%, transparent 33%),
+    radial-gradient(rgba(0,0,0,0.18) 35%, transparent 36%),
+    radial-gradient(rgba(0,0,0,0.18) 32%, transparent 33%),
+    radial-gradient(rgba(0,0,0,0.18) 35%, transparent 36%),
+    radial-gradient(rgba(0,0,0,0.18) 32%, transparent 33%);
+  background-size: 10px 10px;
+  background-position:
+    0 0, 5px 5px,
+    0 10px, 5px 15px,
+    0 20px, 5px 25px,
+    0 30px, 5px 35px,
+    0 40px, 5px 45px,
+    0 50px, 5px 55px,
+    0 60px, 5px 65px,
+    0 70px, 5px 75px,
+    0 80px, 5px 85px,
+    0 90px, 5px 95px,
+    0 100px, 5px 105px;
+  background-repeat: repeat-x;
+  transform: rotate(-15deg);
+  z-index: 0;
+}
+
+/* ---------- 叠加层（反相品牌标） ---------- */
+.landing-overlay-area {
+  position: absolute;
+  top: 0;
+  width: 130px;
+  height: 256px;
+  overflow: hidden;
+  z-index: 2;
+  transition: all 0.35s ease;
+  transform-origin: left top;
+  pointer-events: none;
+}
+
+.landing-overlay-img {
+  filter: invert();
+  position: relative;
+  transition: left 0.08s ease-out, top 0.08s ease-out;
+}
+
+.landing-brand-mark {
+  position: absolute;
+  top: 10px;
+  left: -14px;
+  width: 90px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #000;
+  text-align: center;
+}
+
+/* ---------- Badge ---------- */
+.landing-badge {
+  position: absolute;
+  top: 6px;
+  right: -6px;
+  width: 68px;
+  height: 20px;
+  background: #0224ff;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  z-index: 3;
+  letter-spacing: 0.5px;
+}
+.landing-badge-shadow {
+  position: absolute;
+  top: 6px;
+  right: -6px;
+  width: 28px;
+  height: 20px;
+  background: #1f1f8a;
+  transform: rotate(-45deg);
+  transform-origin: bottom right;
+  z-index: 2;
+}
+
+/* ---------- 底部文字 ---------- */
+.landing-title {
+  position: absolute;
+  bottom: 26px;
+  left: 5px;
+  color: #5b5b5b;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 12px;
+  z-index: 3;
+}
+.landing-subtitle {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  color: #9d9d9d;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 12px;
+  white-space: nowrap;
+  transform: scale(0.5);
+  transform-origin: left;
+  z-index: 3;
 }
 
 /* ---------- CTA 提示 ---------- */
 .landing-cta {
-  z-index: 3;
-  margin-top: 48px;
+  z-index: 10;
+  margin-top: 52px;
   text-align: center;
   animation: ctaPulse 2.5s ease-in-out infinite;
+  cursor: pointer;
 }
-
 .landing-cta-text {
-  color: rgba(140, 180, 255, 0.7);
-  font-size: 0.85rem;
-  letter-spacing: 2px;
+  color: #999;
+  font-size: 0.82rem;
+  letter-spacing: 3px;
   font-weight: 500;
 }
-
 .landing-cta-arrow {
   display: block;
-  color: rgba(140, 180, 255, 0.5);
-  font-size: 1.4rem;
-  margin-top: 6px;
+  color: #aaa;
+  font-size: 1.3rem;
+  margin-top: 4px;
   animation: arrowBounce 1.8s ease-in-out infinite;
 }
 
 @keyframes ctaPulse {
-  0%, 100% { opacity: 0.7; }
+  0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
-
 @keyframes arrowBounce {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(8px); }
+  50% { transform: translateY(6px); }
 }
 
 /* ---------- 退出动画 ---------- */
 #landing-overlay.landing-exit {
-  animation: overlayFadeOut 0.8s ease-in forwards;
+  animation: overlayFadeOut 0.7s ease-in forwards;
 }
-
-#landing-overlay.landing-exit .landing-card {
-  animation: cardFlyOut 0.7s ease-in forwards;
-}
-
 @keyframes overlayFadeOut {
   0% { opacity: 1; }
   100% { opacity: 0; }
 }
 
+#landing-overlay.landing-exit .landing-card-container {
+  animation: cardFlyOut 0.65s ease-in forwards;
+}
 @keyframes cardFlyOut {
   0% { transform: scale(1) translateY(0); opacity: 1; }
-  100% { transform: scale(1.3) translateY(-80px); opacity: 0; }
+  100% { transform: scale(1.4) translateY(-60px); opacity: 0; }
 }
 
 /* ---------- 响应式 ---------- */
 @media screen and (max-width: 768px) {
   .landing-stage {
-    gap: 14px;
-    padding: 0 16px;
+    gap: 0;
+    padding: 0 10px;
     flex-wrap: wrap;
   }
+  .landing-card-container {
+    width: 100px;
+    height: 230px;
+    margin: 0 6px;
+  }
   .landing-card {
-    width: min(28vw, 130px);
+    width: 100px;
+    height: 230px;
   }
-  .landing-card:nth-child(5) {
+  .landing-image-area {
+    width: 100px;
+    height: 196px;
+    bottom: 34px;
+  }
+  .landing-image-main img {
+    width: 100px;
+  }
+  .landing-card-bg {
+    inset: 0 0 34px;
+  }
+  .landing-overlay-area {
+    width: 100px;
+    height: 196px;
+  }
+  .landing-title {
+    font-size: 10px;
+    bottom: 22px;
+  }
+  .landing-subtitle {
+    bottom: 3px;
+  }
+  .landing-badge {
+    width: 56px;
+    font-size: 10px;
+  }
+  .landing-card-container:nth-child(5) {
     display: none;
-  }
-  .landing-card-title {
-    font-size: 0.75rem;
-  }
-  .landing-card-subtitle {
-    font-size: 0.55rem;
   }
 }
