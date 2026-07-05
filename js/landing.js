@@ -22,10 +22,12 @@
       if (typeof GLOBAL_CONFIG_SITE !== 'undefined' &&
           GLOBAL_CONFIG_SITE.pageType === 'home') return true;
     } catch(e) {}
+    // GitHub Pages 子目录兼容
+    var path = window.location.pathname.replace(/\/+$/, '');
+    var base = path.split('/').pop();
     return document.body.classList.contains('home') ||
-           document.querySelector('.recent-posts') ||
-           (window.location.pathname === '/' ||
-            window.location.pathname.replace(/\/$/, '') === '');
+           document.querySelector('#recent-posts') ||
+           path === '' || base === 'my-view-web' || base === '';
   })();
 
   if (!isHome) {

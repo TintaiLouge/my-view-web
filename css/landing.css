@@ -3,14 +3,11 @@
    3D 透视卡片 / 视差分层 / 投影美学
    ============================================ */
 
-/* ---------- FOUC 防护 ---------- */
-html.landing-locked #body-wrap,
-html.landing-locked #nav,
-html.landing-locked #web_bg,
-html.landing-locked #sidebar,
-html.landing-locked #footer,
-html.landing-locked #rightside,
-html.landing-locked .bg-particles { visibility: hidden; }
+/* ---------- FOUC 防护：开屏期间完全隐藏博客 ---------- */
+html.landing-locked body > *:not(#landing-overlay) {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
 
 html.landing-locked body {
   overflow: hidden;
