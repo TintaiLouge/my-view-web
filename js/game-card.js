@@ -183,13 +183,12 @@
 
   // ── 初始化 ──────────────────────────────
   function init() {
-    // 硬设背景图（绕过 CSS 冲突）
-    var webBg = document.getElementById('web_bg');
-    if (webBg) {
-      webBg.style.setProperty('background-image', 'url(images/bg/cerydra.jpg)', 'important');
-      webBg.style.setProperty('background-size', 'cover', 'important');
-      webBg.style.setProperty('background-position', 'center', 'important');
-      webBg.style.setProperty('background-attachment', 'fixed', 'important');
+    // 自建背景层，不依赖 #web_bg
+    if (!document.getElementById('custom-bg')) {
+      var bg = document.createElement('div');
+      bg.id = 'custom-bg';
+      bg.style.cssText = 'position:fixed;inset:0;z-index:-1;background:url(images/bg/cerydra.jpg) center/cover no-repeat;';
+      document.body.insertBefore(bg, document.body.firstChild);
     }
     initPostCard3D();
     createParticles();
