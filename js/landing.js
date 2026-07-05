@@ -165,12 +165,31 @@
   function enterSite(overlay) {
     if (overlay.classList.contains('landing-exit')) return;
     overlay.classList.add('landing-exit');
-    // 解锁前给 body 设背景
     document.body.style.background = "url('images/bg/cerydra.jpg') center / cover fixed";
     document.body.style.backgroundColor = '#060b14';
+
+    // 加载动画
+    var loader = document.createElement('div');
+    loader.id = 'landing-loader';
+    loader.innerHTML =
+      '<svg width="48" height="48" viewBox="0 0 48 48">' +
+      '<circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>' +
+      '<circle cx="24" cy="24" r="20" fill="none" stroke="#5b9cf5" stroke-width="3" stroke-dasharray="90 130" stroke-linecap="round">' +
+      '  <animateTransform attributeName="transform" type="rotate" from="0 24 24" to="360 24 24" dur="0.8s" repeatCount="indefinite"/>' +
+      '</circle>' +
+      '</svg>' +
+      '<p style="color:rgba(255,255,255,0.5);font-size:0.8rem;letter-spacing:2px;margin-top:16px;">LOADING</p>';
+    loader.style.cssText =
+      'position:fixed;inset:0;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(6,11,20,0.92);opacity:0;transition:opacity 0.3s;';
+    document.body.appendChild(loader);
+    requestAnimationFrame(function () { loader.style.opacity = '1'; });
+
     setTimeout(function () {
       document.documentElement.classList.remove('landing-locked');
       if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      // loading 淡出
+      loader.style.opacity = '0';
+      setTimeout(function () { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 400);
     }, 500);
   }
 
