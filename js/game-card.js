@@ -158,78 +158,6 @@
 
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  // ── 苹果液态玻璃导航胶囊 ────────────────
-  function initNavGlass() {
-    var menusWrap = document.querySelector('#nav .menus_items');
-    if (!menusWrap) return;
-
-    // 创建胶囊
-    var capsule = document.createElement('div');
-    capsule.className = 'nav-glass-capsule';
-    menusWrap.appendChild(capsule);
-
-    var items = menusWrap.querySelectorAll('.site-page');
-    var activeItem = null;
-
-    // 找到当前活跃项（根据 URL 匹配）
-    var currentPath = window.location.pathname;
-    for (var i = 0; i < items.length; i++) {
-      var href = items[i].getAttribute('href');
-      if (href && currentPath.indexOf(href.replace(/\/$/, '')) !== -1 && href !== '/') {
-        activeItem = items[i];
-        break;
-      }
-    }
-    // 首页
-    if (!activeItem && (currentPath === '/' || currentPath.indexOf('/my-view-web') !== -1)) {
-      // 找 href="/" 的项
-      for (var j = 0; j < items.length; j++) {
-        if (items[j].getAttribute('href') === '/' ||
-            items[j].getAttribute('href') === '/my-view-web/' ||
-            items[j].getAttribute('href').indexOf('tintailouge') !== -1) {
-          activeItem = items[j];
-          break;
-        }
-      }
-    }
-
-    function moveCapsule(target) {
-      if (!target) return;
-      var wrapRect = menusWrap.getBoundingClientRect();
-      var itemRect = target.getBoundingClientRect();
-      capsule.style.left = (itemRect.left - wrapRect.left) + 'px';
-      capsule.style.width = itemRect.width + 'px';
-    }
-
-    // 初始位置
-    if (activeItem) {
-      activeItem.classList.add('active');
-      setTimeout(function () { moveCapsule(activeItem); }, 100);
-    }
-
-    // Hover 时胶囊跟随
-    for (var k = 0; k < items.length; k++) {
-      items[k].addEventListener('mouseenter', function () {
-        moveCapsule(this);
-      });
-    }
-
-    // 离开菜单区域时回到活跃项
-    menusWrap.addEventListener('mouseleave', function () {
-      if (activeItem) moveCapsule(activeItem);
-      else capsule.style.opacity = '0';
-    });
-
-    menusWrap.addEventListener('mouseenter', function () {
-      capsule.style.opacity = '1';
-    });
-
-    // 窗口大小改变时重新计算
-    window.addEventListener('resize', function () {
-      if (activeItem) moveCapsule(activeItem);
-    });
-  }
-
   // ── IntersectionObserver：卡片入场动画 ─────
   function initCardEntry() {
     if (!('IntersectionObserver' in window)) return;
@@ -255,7 +183,6 @@
 
   // ── 初始化 ──────────────────────────────
   function init() {
-    initNavGlass();
     initPostCard3D();
     createParticles();
     initCardEntry();

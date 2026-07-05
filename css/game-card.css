@@ -61,108 +61,45 @@ body {
   pointer-events: none;
 }
 
-/* ---------- 导航栏：苹果液态玻璃 ---------- */
+/* ---------- 导航栏 ---------- */
 #nav {
-  background: rgba(14, 20, 36, 0.65) !important;
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border-bottom: none !important;
-  box-shadow: none !important;
-  height: 56px;
-  transition: background 0.4s var(--ease-out);
-}
-
-#nav.scrolled {
-  background: rgba(14, 20, 36, 0.85) !important;
-}
-
-/* 菜单容器 */
-#nav .menus_items {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 22px;
-  padding: 3px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.06);
-}
-
-/* 液态玻璃胶囊（JS 控制滑动） */
-.nav-glass-capsule {
-  position: absolute;
-  top: 3px;
-  height: calc(100% - 6px);
-  background: rgba(255,255,255,0.08);
-  border-radius: 20px;
-  transition: left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* 菜单项 */
-#nav .menus_items .site-page {
-  position: relative;
-  z-index: 1;
-  color: var(--text-dim) !important;
-  font-weight: 500;
-  font-size: 0.82rem;
-  letter-spacing: 0.5px;
-  padding: 7px 16px;
-  border-radius: 20px;
-  transition: color 0.3s var(--ease-out);
-}
-
-#nav .menus_items .site-page:hover {
-  color: var(--text-primary) !important;
-}
-
-#nav .menus_items .site-page.active {
-  color: #fff !important;
-}
-
-#nav #site-name {
-  color: #fff !important;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 1.8px;
-  margin-right: 16px;
-}
-
-/* 导航栏：搜索和菜单同行 */
-#nav {
+  background: rgba(6, 10, 20, 0.75) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--glass-border) !important;
+  height: 52px !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: space-between !important;
   padding: 0 20px !important;
 }
-#nav #search-button {
-  position: static !important;
-  margin-left: auto !important;
-  order: 10 !important;
-}
-#nav .menus_items {
-  order: 0;
-}
 
-/* 菜单项从中间向两边延展的下划线 */
-#nav .site-page {
-  position: relative;
+#nav .site-page,
+#nav #site-name {
+  color: var(--text-secondary) !important;
+  font-weight: 500;
+  font-size: 0.85rem;
+  letter-spacing: 0.6px;
+  transition: color 0.3s;
 }
+#nav .site-page:hover { color: #fff !important; }
+#nav #site-name { color: #fff !important; font-size: 1rem; font-weight: 700; letter-spacing: 1.5px; }
+
+/* 隐藏搜索 */
+#nav #search-button { display: none !important; }
+
+/* 导航下划线：中间向两边延展 */
+#nav .site-page { position: relative; }
 #nav .site-page::after {
   content: '';
   position: absolute;
   bottom: 2px;
   left: 50%;
-  width: 60%;
+  width: 70%;
   height: 2px;
   background: var(--accent);
   border-radius: 1px;
   transform: translateX(-50%) scaleX(0);
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 #nav .site-page:hover::after {
   transform: translateX(-50%) scaleX(1);
@@ -170,22 +107,15 @@ body {
 
 /* ---------- Hero 头部 ---------- */
 #page-header.full_page {
+  height: 35vh !important;
   min-height: 35vh !important;
+  max-height: 35vh !important;
   background: transparent !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-/* Hero vignette 暗角 */
-#page-header.full_page::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(6,11,20,0.5) 100%);
-  pointer-events: none;
-  z-index: 1;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  overflow: hidden;
 }
 
 #site-info {
@@ -194,42 +124,19 @@ body {
 }
 
 #site-title {
-  font-size: 3.4rem !important;
+  font-size: 2.6rem !important;
   font-weight: 900 !important;
-  letter-spacing: 8px !important;
+  letter-spacing: 6px !important;
   color: #fff !important;
-  text-shadow:
-    0 0 80px rgba(140, 180, 255, 0.35),
-    0 0 160px rgba(100, 150, 255, 0.15),
-    0 2px 4px rgba(0,0,0,0.5);
-  margin-bottom: 14px;
-  animation: titleGlow 4s ease-in-out infinite;
-}
-
-@keyframes titleGlow {
-  0%, 100% { text-shadow: 0 0 80px rgba(140,180,255,0.35), 0 0 160px rgba(100,150,255,0.15), 0 2px 4px rgba(0,0,0,0.5); }
-  50% { text-shadow: 0 0 100px rgba(140,180,255,0.5), 0 0 200px rgba(100,150,255,0.25), 0 2px 4px rgba(0,0,0,0.5); }
+  text-shadow: 0 0 40px rgba(140,180,255,0.25);
+  margin-bottom: 8px;
 }
 
 #site-subtitle {
-  font-size: 1rem !important;
+  font-size: 0.9rem !important;
   color: var(--text-secondary) !important;
   letter-spacing: 2px;
   font-weight: 400;
-}
-
-/* Hero 装饰光晕 */
-#site-info::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(91,156,245,0.05) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: -1;
 }
 
 /* ---------- 文章卡片：深度丙烯酸 ---------- */
