@@ -183,6 +183,14 @@
 
   // ── 初始化 ──────────────────────────────
   function init() {
+    // 硬设背景图（绕过 CSS 冲突）
+    var webBg = document.getElementById('web_bg');
+    if (webBg) {
+      webBg.style.setProperty('background-image', 'url(images/bg/cerydra.jpg)', 'important');
+      webBg.style.setProperty('background-size', 'cover', 'important');
+      webBg.style.setProperty('background-position', 'center', 'important');
+      webBg.style.setProperty('background-attachment', 'fixed', 'important');
+    }
     initPostCard3D();
     createParticles();
     initCardEntry();
