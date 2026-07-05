@@ -39,8 +39,8 @@ code_blocks:
 
 # Social media links
 social:
-  fas fa-envelope: mailto:2240656737@qq.com || Email || '#5b9cf5'
-  fab fa-weixin: "https://weixin.qq.com/ || WeChat: LJY67100000 || '#40c8e0'"
+  fas fa-envelope: "# || 📧 2240656737@qq.com || '#5b9cf5'"
+  fab fa-weixin: "# || 💬 WeChat: LJY67100000 || '#40c8e0'"
 
 # --------------------------------------
 # Image Settings
@@ -231,7 +231,7 @@ aside:
       enable: true
       icon: fas fa-envelope
       text: 联系我
-      link: mailto:2240656737@qq.com
+      link: "#"
   card_announcement:
     enable: true
     content: 『 设计即体验 』<br><br>专注游戏系统架构与叙事设计，<br>追求玩家体验的每一帧极致。<br><br><span style="font-size:0.82em;color:#8a9bb5;">📧 2240656737@qq.com<br>💬 WeChat LJY67100000</span>
