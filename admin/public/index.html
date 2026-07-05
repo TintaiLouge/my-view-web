@@ -160,8 +160,8 @@ if (!getToken()) {
         <input id="pwd-input" type="password" placeholder="请输入管理密码" style="text-align:center;font-size:0.95rem;padding:12px;margin-bottom:8px;" onkeydown="if(event.key==='Enter')doLogin()">
         <p style="color:var(--dim);font-size:0.68rem;margin-bottom:12px;">💡 密码提示：l9</p>
         <p style="color:var(--red);font-size:0.7rem;margin-bottom:8px;background:rgba(248,113,113,0.08);padding:8px 12px;border-radius:4px;text-align:left;line-height:1.6;">
-          ⚠️ 首次使用或换电脑？<br>在项目根目录打开终端，复制运行：<br>
-          <code style="background:rgba(0,0,0,0.4);padding:4px 8px;border-radius:3px;display:block;margin-top:4px;font-size:0.72rem;color:#fbbf24;word-break:break-all;">echo ***REMOVED*** > admin\.env</code>
+          ⚠️ 首次使用或换电脑？<br>在项目根目录打开 CMD，复制运行下面这行，然后输入密码：<br>
+          <code style="background:rgba(0,0,0,0.4);padding:4px 8px;border-radius:3px;display:block;margin-top:4px;font-size:0.72rem;color:#fbbf24;word-break:break-all;">cmd /v:on /c "set /p pw=Password: &amp;&amp; echo !pw! &gt; admin\.env"</code>
         </p>
         <button class="btn primary" style="width:100%;padding:12px;font-size:0.9rem;" onclick="doLogin()">🔑 进入管理后台</button>
         <p id="login-err" style="color:var(--red);font-size:0.78rem;margin-top:12px;display:none;"></p>
