@@ -47,7 +47,7 @@ social:
 favicon:
 
 avatar:
-  img:
+  img: /images/illustrations/avatar-placeholder.svg
   effect: true
 
 disable_top_img: false
@@ -115,8 +115,9 @@ subtitle:
   typed_option:
   source: false
   sub:
-    - 一个游戏策划的思考笔记
-    - 记录设计、玩法与创意
+    - 系统架构 · 关卡设计 · 叙事体验
+    - Game Design & Creative Direction
+    - 每一帧都是精心设计的体验
 
 # Article layout on homepage: 4 = cover on top, info on bottom (card style)
 index_layout: 4
@@ -223,15 +224,15 @@ aside:
     category: true
   card_author:
     enable: true
-    description: 游戏策划 · 设计思考者
+    description: Game Designer · System Architect · Narrative Designer
     button:
       enable: true
       icon: fab fa-github
       text: GitHub
-      link: https://github.com/
+      link: https://github.com/TintaiLouge
   card_announcement:
     enable: true
-    content: 🎮 欢迎来到我的游戏设计笔记！<br>这里记录着关于关卡设计、叙事系统和玩家体验的思考。
+    content: 『 设计即体验 』<br><br>专注游戏系统架构与叙事设计，<br>追求玩家体验的每一帧极致。
   card_recent_post:
     enable: true
     limit: 5

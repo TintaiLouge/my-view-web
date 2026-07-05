@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#060b14"/>
+      <stop offset="50%" stop-color="#0a1428"/>
+      <stop offset="100%" stop-color="#0c1830"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="30%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="rgba(80,140,240,0.06)"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="70%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(140,100,240,0.04)"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bgGrad)"/>
+  <rect width="1920" height="1080" fill="url(#glow1)"/>
+  <rect width="1920" height="1080" fill="url(#glow2)"/>
+  <!-- 大网格 -->
+  <line x1="0" y1="540" x2="1920" y2="540" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+  <line x1="960" y1="0" x2="960" y2="1080" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+  <!-- 装饰圆 -->
+  <circle cx="960" cy="400" r="200" fill="none" stroke="rgba(110,168,254,0.04)" stroke-width="1"/>
+  <circle cx="960" cy="400" r="300" fill="none" stroke="rgba(110,168,254,0.02)" stroke-width="1"/>
+  <!-- 底部散点 -->
+  <circle cx="480" cy="800" r="2" fill="rgba(140,180,255,0.1)"/>
+  <circle cx="720" cy="750" r="1.5" fill="rgba(140,180,255,0.08)"/>
+  <circle cx="1200" cy="780" r="2" fill="rgba(140,180,255,0.1)"/>
+  <circle cx="1440" cy="820" r="1.5" fill="rgba(140,180,255,0.06)"/>
+</svg>
