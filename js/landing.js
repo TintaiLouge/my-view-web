@@ -37,11 +37,11 @@
 
   // ── 卡片数据 ──────────────────────────────
   var cardData = [
-    { title: '关卡设计', subtitle: 'LEVELDESIGN', badge: '核心能力', img: '/images/illustrations/card-1.jpg' },
-    { title: '系统架构', subtitle: 'SYSTEMDESIGN', badge: '核心能力', img: '/images/illustrations/card-2.jpg' },
-    { title: '叙事体验', subtitle: 'NARRATIVE', badge: '设计方向', img: '/images/illustrations/card-3.jpg' },
-    { title: '设计工具', subtitle: 'TOOLS&CRAFT', badge: '工具箱', img: '/images/illustrations/card-4.jpg' },
-    { title: '作品集', subtitle: 'PORTFOLIO', badge: '成果展示', img: '/images/illustrations/card-5.jpg' },
+    { title: '关卡设计', subtitle: 'LEVELDESIGN', badge: '核心能力', img: 'images/illustrations/card-1.jpg' },
+    { title: '系统架构', subtitle: 'SYSTEMDESIGN', badge: '核心能力', img: 'images/illustrations/card-2.jpg' },
+    { title: '叙事体验', subtitle: 'NARRATIVE', badge: '设计方向', img: 'images/illustrations/card-3.jpg' },
+    { title: '设计工具', subtitle: 'TOOLS&CRAFT', badge: '工具箱', img: 'images/illustrations/card-4.jpg' },
+    { title: '作品集', subtitle: 'PORTFOLIO', badge: '成果展示', img: 'images/illustrations/card-5.jpg' },
   ];
 
   // ── 工具 ──────────────────────────────────
