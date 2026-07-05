@@ -4,7 +4,7 @@ date: 2026-07-05 11:25:30
 tags: [关卡设计, 玩家引导, 游戏分析]
 categories: 设计思考
 description: 好的关卡引导如何让玩家在不知不觉中学会游戏——从半条命到旷野之息的设计哲学
-cover:
+cover: /images/cover-level-design.svg
 ---
 
 ## 看不见的老师

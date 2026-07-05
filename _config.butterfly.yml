@@ -118,8 +118,8 @@ subtitle:
     - 一个游戏策划的思考笔记
     - 记录设计、玩法与创意
 
-# Article layout on homepage: 5 = info displayed on cover (card-like)
-index_layout: 5
+# Article layout on homepage: 4 = cover on top, info on bottom (card style)
+index_layout: 4
 
 index_post_content:
   method: 3
@@ -316,11 +316,11 @@ translate:
 # Read Mode
 readmode: true
 
-# Dark Mode
+# Dark Mode — game UI default
 darkmode:
   enable: true
   button: true
-  autoChangeMode: 1
+  autoChangeMode: false
   start:
   end:
 
@@ -712,8 +712,8 @@ preloader:
 # Page Transition
 enter_transitions: true
 
-# Default display mode - light (default) / dark
-display_mode: light
+# Default display mode - dark (game UI style)
+display_mode: dark
 
 # Configuration for beautifying the content of the article
 beautify:
