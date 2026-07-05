@@ -145,7 +145,7 @@ html.landing-locked body { overflow: hidden; background: #fffef8; }
 .landing-overlay-area {
   position: absolute; top: 0;
   width: 120px; height: 240px;
-  overflow: hidden; z-index: 1;
+  overflow: hidden; z-index: 0;
   transition: all .4s ease; transform-origin: left top;
   pointer-events: none;
 }
