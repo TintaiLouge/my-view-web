@@ -14,7 +14,11 @@ const matter = require('gray-matter');
 const app = express();
 const PORT = 3000;
 const ROOT = path.resolve(__dirname, '..');
-const PASSWORD = '***REMOVED***';
+// 密码从 .env 文件读取，不入 git 仓库
+const envPath = path.join(__dirname, '.env');
+const PASSWORD = fs.existsSync(envPath)
+  ? fs.readFileSync(envPath, 'utf-8').trim()
+  : (process.env.ADMIN_PASSWORD || 'admin');
 
 // ── 鉴权中间件 ──────────────────────────
 const AUTH_TOKEN = 'jingyu-' + Math.random().toString(36).slice(2);
