@@ -37,20 +37,11 @@ body {
 }
 
 /* ---------- 背景 ---------- */
-#custom-bg::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(rgba(6,11,20,0.75), rgba(6,11,20,0.75));
-  pointer-events: none;
-  z-index: -1;
+#web_bg {
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
 }
-
-#body-wrap::before { display: none !important; }
-body { background: #060b14 !important; }
-
-/* 保留 #web_bg 但不依赖它 */
-#web_bg { background: none !important; }
 
 /* ---------- 导航栏 ---------- */
 #nav {
