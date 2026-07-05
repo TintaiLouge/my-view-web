@@ -64,7 +64,7 @@ html.landing-locked body { overflow: hidden; background: #fffef8; }
   z-index: 1; overflow: hidden;
 }
 .landing-image-main {
-  position: absolute; z-index: 1;
+  position: absolute; z-index: 2;
   transition: left .1s ease-out, top .1s ease-out, filter .1s ease-out;
 }
 .landing-image-main img { width: 120px; height: 240px; object-fit: cover; display: block; }
@@ -145,7 +145,7 @@ html.landing-locked body { overflow: hidden; background: #fffef8; }
 .landing-overlay-area {
   position: absolute; top: 0;
   width: 120px; height: 240px;
-  overflow: hidden; z-index: 2;
+  overflow: hidden; z-index: 1;
   transition: all .4s ease; transform-origin: left top;
   pointer-events: none;
 }
