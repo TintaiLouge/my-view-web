@@ -45,6 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+app.use('/images', express.static(path.join(ROOT, 'source', 'images')));
 app.use('/preview', express.static(path.join(ROOT, 'public')));
 
 // 登录路由

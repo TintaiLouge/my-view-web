@@ -19,8 +19,8 @@
   if (!isHome) { document.documentElement.classList.remove('landing-locked'); return; }
 
   // ── 配置（图片换为自己的）──────────────
-  var cardImage = 'https://media.prts.wiki/5/5d/Skin_brand_%E7%94%9F%E5%91%BD%E4%B9%8B%E5%9C%B0.png';
-  var brandImage = 'images/covers/iuno-抠图.png';
+  var cardImage = 'images/illustrations/card-1.jpg';
+  var brandImage = 'https://media.prts.wiki/5/5d/Skin_brand_%E7%94%9F%E5%91%BD%E4%B9%8B%E5%9C%B0.png';
 
   // ── 工具（和原版一样）───────────────────
   var rotate = function (cursorPosition, centerPosition, threshold) {
@@ -168,19 +168,49 @@
     document.body.style.background = "url('images/bg/cerydra.jpg') center / cover fixed";
     document.body.style.backgroundColor = '#060b14';
 
-    // 加载动画
+    // 加载动画（二次元游戏公司风格）
     var loader = document.createElement('div');
     loader.id = 'landing-loader';
     loader.innerHTML =
-      '<svg width="48" height="48" viewBox="0 0 48 48">' +
-      '<circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>' +
-      '<circle cx="24" cy="24" r="20" fill="none" stroke="#5b9cf5" stroke-width="3" stroke-dasharray="90 130" stroke-linecap="round">' +
-      '  <animateTransform attributeName="transform" type="rotate" from="0 24 24" to="360 24 24" dur="0.8s" repeatCount="indefinite"/>' +
+      '<svg width="120" height="120" viewBox="0 0 120 120">' +
+      '<defs>' +
+      '<linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">' +
+      '<stop offset="0%" stop-color="#5b9cf5"/><stop offset="100%" stop-color="#40c8e0"/>' +
+      '</linearGradient>' +
+      '<linearGradient id="lg2" x1="100%" y1="0%" x2="0%" y2="100%">' +
+      '<stop offset="0%" stop-color="#8ec5ff"/><stop offset="100%" stop-color="#5b9cf5"/>' +
+      '</linearGradient>' +
+      '</defs>' +
+      '<circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>' +
+      '<circle cx="60" cy="60" r="52" fill="none" stroke="url(#lg1)" stroke-width="1.5" stroke-dasharray="80 250" stroke-linecap="round">' +
+      '<animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="3s" repeatCount="indefinite"/>' +
+      '</circle>' +
+      '<polygon points="60,22 93,41 93,79 60,98 27,79 27,41" fill="none" stroke="rgba(91,156,245,0.15)" stroke-width="1">' +
+      '<animateTransform attributeName="transform" type="rotate" from="0 60 60" to="-360 60 60" dur="8s" repeatCount="indefinite"/>' +
+      '</polygon>' +
+      '<circle cx="60" cy="60" r="36" fill="none" stroke="url(#lg2)" stroke-width="2" stroke-dasharray="60 170" stroke-linecap="round">' +
+      '<animateTransform attributeName="transform" type="rotate" from="360 60 60" to="0 60 60" dur="2s" repeatCount="indefinite"/>' +
+      '</circle>' +
+      '<polygon points="60,30 78,48 60,66 42,48" fill="none" stroke="rgba(64,200,224,0.25)" stroke-width="1">' +
+      '<animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="4s" repeatCount="indefinite"/>' +
+      '</polygon>' +
+      '<circle cx="60" cy="60" r="3" fill="#8ec5ff">' +
+      '<animate attributeName="r" values="3;5;3" dur="1.5s" repeatCount="indefinite"/>' +
+      '<animate attributeName="opacity" values="1;0.4;1" dur="1.5s" repeatCount="indefinite"/>' +
+      '</circle>' +
+      '<circle cx="60" cy="14" r="1.5" fill="#5b9cf5">' +
+      '<animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="4s" repeatCount="indefinite"/>' +
+      '</circle>' +
+      '<circle cx="60" cy="14" r="1" fill="#40c8e0">' +
+      '<animateTransform attributeName="transform" type="rotate" from="120 60 60" to="480 60 60" dur="3s" repeatCount="indefinite"/>' +
+      '</circle>' +
+      '<circle cx="60" cy="14" r="1.5" fill="#8ec5ff">' +
+      '<animateTransform attributeName="transform" type="rotate" from="240 60 60" to="600 60 60" dur="5s" repeatCount="indefinite"/>' +
       '</circle>' +
       '</svg>' +
-      '<p style="color:rgba(255,255,255,0.5);font-size:0.8rem;letter-spacing:2px;margin-top:16px;">LOADING</p>';
+      '<p style="color:rgba(140,197,255,0.6);font-size:0.75rem;letter-spacing:4px;margin-top:20px;">JINGYU</p>';
     loader.style.cssText =
-      'position:fixed;inset:0;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(6,11,20,0.92);opacity:0;transition:opacity 0.3s;';
+      'position:fixed;inset:0;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(6,11,20,0.94);opacity:0;transition:opacity 0.3s;';
     document.body.appendChild(loader);
     requestAnimationFrame(function () { loader.style.opacity = '1'; });
 

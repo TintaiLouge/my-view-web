@@ -335,6 +335,75 @@
   }
   .drop-zone p { color:var(--dim); font-size:0.85rem; }
 
+  /* 编辑器工具栏 */
+  .editor-toolbar {
+    display:flex; align-items:center; gap:6px;
+    padding:8px 12px;
+    background:rgba(0,0,0,0.2);
+    border:1px solid var(--border);
+    border-bottom:none;
+    border-radius:var(--radius-sm) var(--radius-sm) 0 0;
+  }
+  .editor-toolbar + textarea {
+    border-top-left-radius:0 !important;
+    border-top-right-radius:0 !important;
+    border-top:none !important;
+  }
+  textarea.drag-over {
+    border-color:var(--accent) !important;
+    box-shadow:0 0 0 3px rgba(91,156,245,0.15) !important;
+    background:rgba(91,156,245,0.04) !important;
+  }
+
+  /* 图库选择弹窗 */
+  .modal-overlay {
+    position:fixed; inset:0; z-index:9999;
+    background:rgba(0,0,0,0.65);
+    backdrop-filter:blur(4px);
+    display:flex; align-items:center; justify-content:center;
+    animation:fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .modal-box {
+    background:var(--panel-solid);
+    border:1px solid var(--border);
+    border-radius:8px;
+    width:680px; max-height:70vh;
+    display:flex; flex-direction:column;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  }
+  .modal-header {
+    padding:16px 20px;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+    font-weight:700; font-size:0.9rem;
+  }
+  .modal-body {
+    flex:1; overflow-y:auto; padding:16px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(130px, 1fr));
+    gap:10px;
+  }
+  .modal-img-item {
+    cursor:pointer; border-radius:4px;
+    border:2px solid transparent;
+    overflow:hidden;
+    transition:all 0.2s;
+  }
+  .modal-img-item:hover {
+    border-color:var(--accent);
+    box-shadow:0 0 12px rgba(91,156,245,0.2);
+  }
+  .modal-img-item img {
+    width:100%; height:90px; object-fit:cover;
+    display:block; background:rgba(0,0,0,0.3);
+  }
+  .modal-img-item .modal-img-name {
+    font-size:0.62rem; padding:4px 6px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    color:var(--dim); background:rgba(0,0,0,0.3);
+  }
+
   /* 登录页面 */
   .login-wrapper {
     display:flex; align-items:center; justify-content:center;
@@ -602,8 +671,18 @@ function showEditor() {
             <input id="edit-cover" value="${esc(p.cover)}" placeholder="/images/covers/cover-xxx.jpg">
           </div>
           <div class="field">
-            <label>正文（Markdown）</label>
-            <textarea id="edit-content" rows="18" oninput="updatePreview()">${esc(p.content)}</textarea>
+            <label>正文（Markdown）<span style="font-weight:400;color:var(--dim);font-size:0.7rem;"> · 支持粘贴/拖拽图片自动上传</span></label>
+            <div class="editor-toolbar">
+              <button class="btn sm" onclick="insertImageFromFile()" title="插入本地图片"><i class="fa-solid fa-image"></i> 插入图片</button>
+              <button class="btn sm" onclick="showImageLibrary()" title="从图库选择"><i class="fa-solid fa-folder-open"></i> 图库</button>
+              <span id="upload-status" style="font-size:0.7rem;color:var(--accent);margin-left:8px;display:none;"></span>
+            </div>
+            <textarea id="edit-content" rows="16" oninput="updatePreview()"
+              onpaste="handleEditorPaste(event)"
+              ondrop="handleEditorDrop(event)"
+              ondragover="event.preventDefault();this.classList.add('drag-over')"
+              ondragleave="this.classList.remove('drag-over')"
+              placeholder="在此编辑 Markdown 正文...&#10;&#10;💡 提示：可以直接粘贴图片（Ctrl+V），或拖拽图片到编辑区，自动上传并插入 Markdown 图片标签">${esc(p.content)}</textarea>
           </div>
         </div>
       </div>
@@ -645,6 +724,136 @@ async function savePost() {
     toast(res.message);
   }
   renderPosts();
+}
+
+// ── 编辑器图片粘贴/拖拽上传 ──────────────
+
+function insertAtCursor(textarea, text) {
+  var start = textarea.selectionStart;
+  var end = textarea.selectionEnd;
+  var before = textarea.value.substring(0, start);
+  var after = textarea.value.substring(end);
+  textarea.value = before + text + after;
+  textarea.selectionStart = textarea.selectionEnd = start + text.length;
+  textarea.focus();
+  updatePreview();
+}
+
+async function uploadAndInsert(file, textarea) {
+  var status = document.getElementById('upload-status');
+  if (status) { status.style.display = 'inline'; status.textContent = '⏳ 上传中...'; }
+  try {
+    var form = new FormData();
+    form.append('images', file);
+    var res = await fetch('/api/images/upload', {
+      method:'POST',
+      headers:{'X-Auth-Token':getToken()||''},
+      body:form
+    });
+    var data = await res.json();
+    if (data.success && data.files && data.files.length) {
+      var url = data.files[0].path; // /images/xxx.jpg
+      var md = '![' + (file.name || 'image') + '](' + url + ')';
+      insertAtCursor(textarea || document.getElementById('edit-content'), md);
+      if (status) { status.textContent = '✅ 已上传'; }
+      setTimeout(function(){ if (status) status.style.display = 'none'; }, 1500);
+    } else {
+      if (status) { status.textContent = '❌ 上传失败'; }
+      setTimeout(function(){ if (status) status.style.display = 'none'; }, 2000);
+    }
+  } catch(e) {
+    if (status) { status.textContent = '❌ 网络错误'; }
+    setTimeout(function(){ if (status) status.style.display = 'none'; }, 2000);
+  }
+}
+
+function handleEditorPaste(event) {
+  var items = event.clipboardData && event.clipboardData.items;
+  if (!items) return;
+
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    if (item.type.indexOf('image') !== -1) {
+      event.preventDefault(); // 阻止默认粘贴（否则粘贴文件名）
+      var blob = item.getAsFile();
+      // 给个合适的文件名
+      var ext = item.type.split('/')[1] || 'png';
+      var file = new File([blob], 'paste-' + Date.now() + '.' + ext, {type: item.type});
+      uploadAndInsert(file, event.target);
+      return; // 一次只处理一张图，剩余由后续 paste 事件处理
+    }
+  }
+  // 没有图片 → 正常粘贴文本
+}
+
+function handleEditorDrop(event) {
+  event.preventDefault();
+  event.target.classList.remove('drag-over');
+  var files = event.dataTransfer.files;
+  if (!files.length) return;
+  var textarea = event.target;
+  // 逐个上传
+  Array.from(files).forEach(function(f) {
+    if (f.type.startsWith('image/')) {
+      uploadAndInsert(f, textarea);
+    }
+  });
+}
+
+function insertImageFromFile() {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.multiple = true;
+  input.onchange = function() {
+    var textarea = document.getElementById('edit-content');
+    Array.from(input.files).forEach(function(f) {
+      uploadAndInsert(f, textarea);
+    });
+  };
+  input.click();
+}
+
+function showImageLibrary() {
+  // 获取图库
+  fetch('/api/images', { headers:{'X-Auth-Token':getToken()||''} })
+    .then(function(r){ return r.json(); })
+    .then(function(images){
+      if (!images.length) { toast('图库为空，请先上传图片', 'error'); return; }
+      var overlay = document.createElement('div');
+      overlay.className = 'modal-overlay';
+      overlay.innerHTML =
+        '<div class="modal-box">' +
+        '<div class="modal-header">' +
+        '<span><i class="fa-solid fa-images"></i> 选择图片插入（' + images.length + ' 张）</span>' +
+        '<button class="btn sm" onclick="this.closest(\'.modal-overlay\').remove()">✕ 关闭</button>' +
+        '</div>' +
+        '<div class="modal-body">' +
+        images.map(function(img){
+          return '<div class="modal-img-item" onclick="insertImageFromLibrary(\'' +
+            img.path.replace(/'/g, "\\'") + '\', \'' +
+            (img.name||'image').replace(/'/g, "\\'") + '\')" title="' +
+            img.name + '">' +
+            '<img src="' + img.path + '" loading="lazy" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%2290%22><rect fill=%22%23111%22 width=%22100%22 height=%2290%22/></svg>\'">' +
+            '<div class="modal-img-name">' + img.name + '</div>' +
+            '</div>';
+        }).join('') +
+        '</div></div>';
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', function(e){
+        if (e.target === overlay) overlay.remove();
+      });
+    });
+}
+
+function insertImageFromLibrary(path, name) {
+  var textarea = document.getElementById('edit-content');
+  if (!textarea) return;
+  insertAtCursor(textarea, '![' + name + '](' + path + ')');
+  // 关闭弹窗
+  var overlay = document.querySelector('.modal-overlay');
+  if (overlay) overlay.remove();
+  toast('图片已插入');
 }
 
 // ── 图片 Tab ──────────────────────────────
