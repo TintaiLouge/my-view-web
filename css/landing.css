@@ -133,6 +133,31 @@ html.landing-locked body { overflow: hidden; background: #fffef8; }
   white-space: nowrap; transform: scale(.5); transform-origin: left;
 }
 
+/* 卡片底部进入按钮 */
+.landing-enter-btn {
+  position: absolute;
+  right: 4px;
+  bottom: 6px;
+  height: 22px;
+  padding: 0 10px;
+  background: #0224ff;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border: none;
+  border-radius: 11px;
+  cursor: pointer;
+  z-index: 5;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  line-height: 22px;
+  text-align: center;
+}
+.landing-enter-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(2,36,255,0.3);
+}
+
 /* 叠加层（反相品牌标） */
 .landing-overlay-area {
   position: absolute; top: 0;

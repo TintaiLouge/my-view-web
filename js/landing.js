@@ -67,10 +67,13 @@
       '<div class="landing-badge">作品集</div>' +
       '<div class="landing-badge-shadow"></div>' +
       '<div class="landing-title">JINGYU</div>' +
-      '<div class="landing-subtitle">GAMEDESIGN</div>';
+      '<div class="landing-subtitle">GAMEDESIGN</div>' +
+      '<div class="landing-enter-btn">进入</div>';
 
-    card.addEventListener('click', function () { enterSite(overlay); });
+    // 点击按钮进入（卡片本体只展示 3D 效果）
     container.appendChild(card);
+    var enterBtn = card.querySelector('.landing-enter-btn');
+    if (enterBtn) enterBtn.addEventListener('click', function (e) { e.stopPropagation(); enterSite(overlay); });
     overlay.appendChild(container);
 
     // CTA

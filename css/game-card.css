@@ -39,23 +39,25 @@ body {
 /* ---------- 丙烯酸背景 ---------- */
 #web_bg {
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(90, 120, 220, 0.06) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 20%, rgba(120, 80, 220, 0.04) 0%, transparent 45%),
-    radial-gradient(ellipse at 20% 80%, rgba(64, 200, 224, 0.03) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 10%, rgba(90, 130, 230, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 30%, rgba(140, 100, 230, 0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 20% 70%, rgba(64, 200, 224, 0.05) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 90%, rgba(40, 60, 140, 0.08) 0%, transparent 40%),
     var(--bg-deep) !important;
   opacity: 1 !important;
 }
 
-/* 网格纹理层 */
+/* 网格 + 星点纹理 */
 #body-wrap::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: -1;
   background-image:
-    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
-  background-size: 32px 32px;
+    radial-gradient(rgba(255,255,255,0.04) 0.5px, transparent 0.5px),
+    linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+  background-size: 80px 80px, 40px 40px, 40px 40px;
   pointer-events: none;
 }
 
@@ -130,9 +132,45 @@ body {
   margin-right: 16px;
 }
 
+/* 导航栏：搜索和菜单同行 */
+#nav {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 20px !important;
+}
+#nav #search-button {
+  position: static !important;
+  margin-left: auto !important;
+  order: 10 !important;
+}
+#nav .menus_items {
+  order: 0;
+}
+
+/* 菜单项从中间向两边延展的下划线 */
+#nav .site-page {
+  position: relative;
+}
+#nav .site-page::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 60%;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  transform: translateX(-50%) scaleX(0);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#nav .site-page:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
 /* ---------- Hero 头部 ---------- */
 #page-header.full_page {
-  min-height: 70vh !important;
+  min-height: 35vh !important;
   background: transparent !important;
   display: flex;
   align-items: center;
