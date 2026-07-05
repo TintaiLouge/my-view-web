@@ -210,6 +210,202 @@
     // 清理旧观察者
     particles = [];
     setTimeout(init, 300);
+    setTimeout(initContactCopy, 300);
   });
+
+  // ── 联系方式：悬停浮窗 + 点击复制 ──────────
+  var contactData = {};
+
+  function parseContactFromEl(el) {
+    // title 格式: "📧 2240656737@qq.com" 或 "💬 WeChat: LJY67100000"
+    var raw = el.getAttribute('title') || '';
+    // emoji 前缀提取类型
+    var type = raw.indexOf('📧') !== -1 ? '邮箱' :
+               raw.indexOf('💬') !== -1 ? '微信' : '联系方式';
+    // 提取实际内容（去掉 emoji 和前缀）
+    var value = raw.replace(/^[📧💬]\s*/, '');
+    if (value.indexOf('WeChat:') === 0) value = value.replace('WeChat:', '').trim();
+    return { type: type, value: value, raw: raw };
+  }
+
+  function showTooltip(el, data) {
+    hideTooltip();
+    var tip = document.createElement('div');
+    tip.className = 'contact-tooltip';
+    tip.id = 'contact-tooltip';
+    tip.innerHTML = data.value + '<span class="tooltip-hint">点击复制' + data.type + '</span>';
+    el.appendChild(tip);
+  }
+
+  function hideTooltip() {
+    var tip = document.getElementById('contact-tooltip');
+    if (tip) tip.remove();
+  }
+
+  function showCopyToast(data) {
+    var existing = document.querySelector('.copy-toast');
+    if (existing) existing.remove();
+
+    var toast = document.createElement('div');
+    toast.className = 'copy-toast';
+    toast.innerHTML = '✅ ' + data.type + '已复制：<b>' + data.value + '</b>';
+    document.body.appendChild(toast);
+    setTimeout(function () { if (toast.parentNode) toast.remove(); }, 2200);
+  }
+
+  function handleContactClick(e) {
+    var el = e.currentTarget;
+    var data = parseContactFromEl(el);
+    hideTooltip();
+
+    // 提取纯文本值用于复制
+    var copyVal = data.value;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(copyVal).then(function () {
+        showCopyToast(data);
+      }).catch(function () {
+        fallbackCopy(copyVal, data);
+      });
+    } else {
+      fallbackCopy(copyVal, data);
+    }
+  }
+
+  function fallbackCopy(text, data) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px;';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showCopyToast(data); } catch(e) {}
+    document.body.removeChild(ta);
+  }
+
+  function initContactCopy() {
+    // 社交图标
+    var icons = document.querySelectorAll('.card-info-social-icons .social-icon');
+    for (var i = 0; i < icons.length; i++) {
+      var icon = icons[i];
+      // 移除旧事件（避免 Pjax 重复绑定）
+      var clone = icon.cloneNode(true);
+      icon.parentNode.replaceChild(clone, icon);
+
+      var data = parseContactFromEl(clone);
+      contactData[clone.className] = data;
+
+      clone.addEventListener('mouseenter', function () {
+        var d = parseContactFromEl(this);
+        showTooltip(this, d);
+      });
+      clone.addEventListener('mouseleave', function () {
+        hideTooltip();
+      });
+      clone.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var d = parseContactFromEl(this);
+        handleContactClick({ currentTarget: this });
+      });
+      // 移除 target="_blank" 防止新标签页
+      clone.removeAttribute('target');
+    }
+
+    // 「联系我」按钮
+    var btn = document.getElementById('card-info-btn');
+    if (btn) {
+      var btnClone = btn.cloneNode(true);
+      btn.parentNode.replaceChild(btnClone, btn);
+      btnClone.removeAttribute('target');
+
+      btnClone.addEventListener('mouseenter', function () {
+        showTooltip(this, { type: '联系方式', value: '📧 2240656737@qq.com / 💬 LJY67100000' });
+      });
+      btnClone.addEventListener('mouseleave', function () {
+        hideTooltip();
+      });
+      btnClone.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        // 「联系我」点击弹出选择
+        hideTooltip();
+        showContactChooser(btnClone);
+      });
+    }
+  }
+
+  function showContactChooser(anchor) {
+    hideTooltip();
+    // 移除旧的选择器
+    var old = document.getElementById('contact-chooser');
+    if (old) old.remove();
+
+    var chooser = document.createElement('div');
+    chooser.id = 'contact-chooser';
+    chooser.style.cssText =
+      'position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);' +
+      'background:rgba(14,24,46,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);' +
+      'border:1px solid rgba(140,180,255,0.2);border-radius:6px;padding:4px;' +
+      'z-index:9999;display:flex;gap:4px;box-shadow:0 8px 24px rgba(0,0,0,0.5);' +
+      'animation:tooltipIn 0.2s ease-out;white-space:nowrap;';
+
+    chooser.innerHTML =
+      '<button class="chooser-opt" data-val="2240656737@qq.com" style="' +
+      'background:rgba(91,156,245,0.1);border:1px solid rgba(91,156,245,0.2);color:#e4ecf7;' +
+      'padding:6px 14px;border-radius:4px;cursor:pointer;font-size:0.8rem;font-family:inherit;' +
+      'transition:all 0.2s;">📧 复制邮箱</button>' +
+      '<button class="chooser-opt" data-val="LJY67100000" style="' +
+      'background:rgba(64,200,224,0.1);border:1px solid rgba(64,200,224,0.2);color:#e4ecf7;' +
+      'padding:6px 14px;border-radius:4px;cursor:pointer;font-size:0.8rem;font-family:inherit;' +
+      'transition:all 0.2s;">💬 复制微信</button>';
+
+    anchor.style.position = 'relative';
+    anchor.appendChild(chooser);
+
+    // 绑定事件
+    var opts = chooser.querySelectorAll('.chooser-opt');
+    for (var i = 0; i < opts.length; i++) {
+      opts[i].addEventListener('mouseenter', function () {
+        this.style.background = 'rgba(255,255,255,0.08)';
+      });
+      opts[i].addEventListener('mouseleave', function () {
+        this.style.background = '';
+      });
+      opts[i].addEventListener('click', function (e) {
+        e.stopPropagation();
+        var val = this.getAttribute('data-val');
+        var type = val.indexOf('@') !== -1 ? '邮箱' : '微信';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(val).then(function () {
+            showCopyToast({ type: type, value: val });
+          });
+        } else {
+          fallbackCopy(val, { type: type, value: val });
+        }
+        var c = document.getElementById('contact-chooser');
+        if (c) c.remove();
+      });
+    }
+
+    // 点击外部关闭
+    setTimeout(function () {
+      document.addEventListener('click', function closeChooser(e) {
+        var c = document.getElementById('contact-chooser');
+        if (c && !c.contains(e.target)) {
+          c.remove();
+          document.removeEventListener('click', closeChooser);
+        }
+      });
+    }, 50);
+  }
+
+  // ── 初始化联系方式 ────────────────────────
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(initContactCopy, 400);
+    });
+  } else {
+    setTimeout(initContactCopy, 400);
+  }
 
 })();

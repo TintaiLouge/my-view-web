@@ -625,6 +625,88 @@ body {
   color: #1d4ed8 !important;
 }
 
+/* ---------- 联系方式：悬停浮窗 + 点击复制 ---------- */
+.social-icon, #card-info-btn {
+  position: relative;
+  cursor: pointer !important;
+}
+/* 隐藏原生 title 工具提示 */
+.social-icon[title]:hover::after,
+#card-info-btn[title]:hover::after {
+  content: none;
+}
+
+/* 自定义浮窗 */
+.contact-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(14,24,46,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(140,180,255,0.2);
+  color: #e4ecf7;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 9999;
+  animation: tooltipIn 0.2s var(--ease-out);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 12px rgba(91,156,245,0.08);
+}
+.contact-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(14,24,46,0.95);
+}
+.contact-tooltip .tooltip-hint {
+  display: block;
+  font-size: 0.62rem;
+  color: #556278;
+  font-weight: 400;
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+@keyframes tooltipIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* 复制成功 Toast */
+.copy-toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(52,211,153,0.15);
+  border: 1px solid rgba(52,211,153,0.3);
+  color: #34d399;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  z-index: 99999;
+  pointer-events: none;
+  animation: copyToastIn 0.35s var(--ease-out), copyToastOut 0.35s var(--ease-out) 1.8s forwards;
+  box-shadow: 0 4px 20px rgba(52,211,153,0.1);
+}
+@keyframes copyToastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes copyToastOut {
+  from { opacity: 1; transform: translateX(-50%) translateY(0); }
+  to   { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+}
+
 /* ---------- 响应式 ---------- */
 @media screen and (max-width: 768px) {
   #site-title { font-size: 2rem !important; letter-spacing: 4px !important; }
