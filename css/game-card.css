@@ -1,0 +1,339 @@
+/* ============================================
+   游戏卡片风格 — 明日方舟 UI 美学
+   Game Card Aesthetic for Hexo Blog
+   ============================================ */
+
+/* ---------- CSS 变量：统一调色板 ---------- */
+:root {
+  --game-bg: #fffef8;
+  --game-card-bg: #ffffff;
+  --game-accent: #0224ff;
+  --game-accent-dark: #1f1f8a;
+  --game-text: #5b5b5b;
+  --game-text-light: #9d9d9d;
+  --game-shadow: rgba(0, 0, 20, 0.18);
+  --game-radius: 2px;
+  --card-transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ---------- 全局背景 ---------- */
+body {
+  background: var(--game-bg) !important;
+}
+
+#body-wrap {
+  background: var(--game-bg);
+}
+
+/* ---------- 导航栏游戏化 ---------- */
+#nav {
+  background: rgba(255, 254, 248, 0.92) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 1px 0 rgba(2, 36, 255, 0.08);
+}
+
+#nav .site-page,
+#nav #site-name {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+#nav .site-page:hover {
+  color: var(--game-accent) !important;
+}
+
+/* ---------- 首页文章卡片 — 3D 透视容器 ---------- */
+.recent-post-item {
+  background: var(--game-card-bg) !important;
+  border-radius: var(--game-radius) !important;
+  box-shadow: 0 4px 12px var(--game-shadow) !important;
+  transition: transform var(--card-transition),
+              box-shadow 0.4s ease,
+              z-index 0.4s ease !important;
+  transform: scale(1);
+  z-index: 0;
+  position: relative;
+  overflow: visible !important;
+  /* 为视差效果留空间 */
+  cursor: pointer;
+}
+
+/* 卡片悬停：放大 + 加深阴影 */
+.recent-post-item:hover {
+  transform: scale(1.03) !important;
+  z-index: 10 !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 20, 0.25) !important;
+}
+
+/* ---------- 卡片封面图 ---------- */
+.recent-post-item .post_cover {
+  overflow: hidden;
+  transition: filter 0.3s ease;
+}
+
+.recent-post-item:hover .post_cover img {
+  filter: brightness(1.05);
+  transition: filter 0.3s ease;
+}
+
+/* ---------- 卡片标题 — 匹配游戏卡片 title 样式 ---------- */
+.recent-post-item .article-title,
+.recent-post-item h2 a {
+  color: var(--game-text) !important;
+  font-weight: bold !important;
+  font-size: 1.15rem !important;
+  letter-spacing: 0.3px;
+  transition: color 0.3s ease;
+}
+
+.recent-post-item:hover .article-title,
+.recent-post-item:hover h2 a {
+  color: var(--game-accent) !important;
+}
+
+/* ---------- 分类标签 — 仿游戏 badge 样式 ---------- */
+.article-meta__categories a,
+.article-meta-categories a,
+.recent-post-item .article-meta .categories a {
+  background: var(--game-accent) !important;
+  color: #fff !important;
+  font-size: 11px !important;
+  padding: 2px 10px !important;
+  border-radius: 0 !important;
+  position: relative;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  /* badgeb shadow 角的模拟 */
+  box-shadow: 3px 3px 0 -1px var(--game-accent-dark),
+              -1px -1px 0 0 var(--game-accent-dark);
+}
+
+.article-meta__categories a:hover,
+.article-meta-categories a:hover {
+  background: var(--game-accent-dark) !important;
+  box-shadow: 3px 3px 0 -1px var(--game-accent),
+              -1px -1px 0 0 var(--game-accent);
+}
+
+/* ---------- 标签样式 ---------- */
+.article-meta__tags a,
+.article-meta-tags a {
+  color: var(--game-text-light) !important;
+  border-bottom: 1px solid transparent !important;
+  font-size: 0.78rem;
+  transition: all 0.3s ease;
+}
+
+.article-meta__tags a:hover {
+  color: var(--game-accent) !important;
+  border-bottom-color: var(--game-accent) !important;
+}
+
+/* ---------- 侧边栏卡片 ---------- */
+#aside-content .card-widget {
+  background: var(--game-card-bg) !important;
+  border-radius: var(--game-radius) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 20, 0.08) !important;
+  transition: box-shadow 0.3s ease;
+}
+
+#aside-content .card-widget:hover {
+  box-shadow: 0 4px 16px var(--game-shadow) !important;
+}
+
+/* 侧边栏作者卡片按钮 */
+#aside-content .card-info #card-info-btn {
+  background: var(--game-accent) !important;
+  color: #fff !important;
+  border-radius: 0 !important;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+#aside-content .card-info #card-info-btn:hover {
+  background: var(--game-accent-dark) !important;
+}
+
+/* ---------- 文章页内容样式 ---------- */
+#post {
+  background: var(--game-card-bg) !important;
+  border-radius: var(--game-radius) !important;
+  box-shadow: 0 4px 12px var(--game-shadow) !important;
+  padding: 2rem 2.5rem;
+}
+
+/* 文章页标题 */
+#article-container h1,
+.post-title {
+  color: var(--game-text) !important;
+  font-weight: bold !important;
+}
+
+/* 文章链接 */
+#article-container a {
+  color: var(--game-accent) !important;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-decoration: underline;
+  text-decoration-color: rgba(2, 36, 255, 0.25);
+  text-underline-offset: 3px;
+}
+
+#article-container a:hover {
+  text-decoration-color: var(--game-accent);
+}
+
+/* ---------- 分页按钮 ---------- */
+#pagination .page-number.current {
+  background: var(--game-accent) !important;
+  color: #fff !important;
+  border-radius: 0 !important;
+}
+
+#pagination a:hover {
+  color: var(--game-accent) !important;
+}
+
+/* ---------- 页脚 ---------- */
+#footer {
+  background: transparent !important;
+  color: var(--game-text-light) !important;
+}
+
+#footer a {
+  color: var(--game-accent) !important;
+}
+
+/* ---------- dot pattern 装饰：页面背景 ---------- */
+#web_bg {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  background-color: var(--game-bg);
+  /* 大尺寸圆点纹理 */
+  background-image:
+    radial-gradient(rgba(2, 36, 255, 0.04) 1px, transparent 1px),
+    radial-gradient(rgba(2, 36, 255, 0.03) 2px, transparent 2px);
+  background-size: 40px 40px, 80px 80px;
+  background-position: 0 0, 20px 20px;
+  opacity: 0.6;
+}
+
+/* ---------- dot pattern 装饰：卡片底部 ---------- */
+.recent-post-item::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: 0;
+  width: 100%;
+  height: 4px;
+  background-image:
+    radial-gradient(rgba(2, 36, 255, 0.12) 1px, transparent 1px);
+  background-size: 8px 8px;
+  background-position: 0 0;
+  background-repeat: repeat-x;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.recent-post-item:hover::after {
+  opacity: 1;
+}
+
+/* ---------- 滚动条 ---------- */
+::-webkit-scrollbar-thumb {
+  background: rgba(2, 36, 255, 0.2) !important;
+  border-radius: 0 !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(2, 36, 255, 0.4) !important;
+}
+
+/* ---------- 选择文本高亮 ---------- */
+::selection {
+  background: rgba(2, 36, 255, 0.15) !important;
+  color: var(--game-accent) !important;
+}
+
+/* ---------- 顶部横幅遮罩 ---------- */
+#page-header #site-info {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ---------- 代码块 ---------- */
+#article-container figure.highlight {
+  border-radius: 0 !important;
+  box-shadow: 0 2px 8px var(--game-shadow);
+}
+
+/* ---------- blockquote ---------- */
+#article-container blockquote {
+  border-left: 3px solid var(--game-accent) !important;
+  background: rgba(2, 36, 255, 0.03) !important;
+  border-radius: 0 var(--game-radius) var(--game-radius) 0;
+}
+
+/* ---------- 相关文章卡片 ---------- */
+.relatedPosts > .relatedPosts-list > div {
+  background: var(--game-card-bg) !important;
+  border-radius: var(--game-radius) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 20, 0.06) !important;
+  transition: transform var(--card-transition), box-shadow 0.3s ease;
+}
+
+.relatedPosts > .relatedPosts-list > div:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px var(--game-shadow) !important;
+}
+
+/* ---------- 归档/分类/标签页卡片 ---------- */
+.category-lists .category-list-count,
+.tag-cloud-tags a {
+  transition: all 0.3s ease;
+}
+
+.tag-cloud-tags a:hover {
+  background: var(--game-accent) !important;
+  color: #fff !important;
+}
+
+/* ---------- 响应式 ---------- */
+@media screen and (max-width: 768px) {
+  .recent-post-item:hover {
+    transform: scale(1.01) !important;
+  }
+
+  #post {
+    padding: 1.2rem 1rem;
+  }
+}
+
+/* ---------- 暗色模式覆盖 ---------- */
+[data-theme="dark"] #web_bg {
+  background-color: #0d0d0d;
+  background-image:
+    radial-gradient(rgba(2, 36, 255, 0.06) 1px, transparent 1px),
+    radial-gradient(rgba(2, 36, 255, 0.04) 2px, transparent 2px);
+}
+
+[data-theme="dark"] #nav {
+  background: rgba(13, 13, 13, 0.92) !important;
+  box-shadow: 0 1px 0 rgba(2, 36, 255, 0.12);
+}
+
+[data-theme="dark"] .recent-post-item,
+[data-theme="dark"] #aside-content .card-widget,
+[data-theme="dark"] #post {
+  background: #1a1a1a !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}

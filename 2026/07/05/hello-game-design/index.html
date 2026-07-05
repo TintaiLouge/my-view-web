@@ -1,0 +1,257 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>从关卡设计谈起——什么是好的引导 | 游戏策划小站</title><meta name="author" content="游戏策划"><meta name="copyright" content="游戏策划"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#fffef8"><meta name="description" content="好的关卡引导如何让玩家在不知不觉中学会游戏——从半条命到旷野之息的设计哲学">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从关卡设计谈起——什么是好的引导">
+<meta property="og:url" content="https://tintailouge.github.io/my-view-web/2026/07/05/hello-game-design/index.html">
+<meta property="og:site_name" content="游戏策划小站">
+<meta property="og:description" content="好的关卡引导如何让玩家在不知不觉中学会游戏——从半条命到旷野之息的设计哲学">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-05T03:25:30.000Z">
+<meta property="article:modified_time" content="2026-07-05T03:25:56.572Z">
+<meta property="article:author" content="游戏策划">
+<meta property="article:tag" content="关卡设计">
+<meta property="article:tag" content="游戏分析">
+<meta property="article:tag" content="玩家引导">
+<meta name="twitter:card" content="summary"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "从关卡设计谈起——什么是好的引导",
+  "url": "https://tintailouge.github.io/my-view-web/2026/07/05/hello-game-design/",
+  "image": "",
+  "datePublished": "2026-07-05T03:25:30.000Z",
+  "dateModified": "2026-07-05T03:25:56.572Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "游戏策划",
+      "url": "https://tintailouge.github.io/my-view-web"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/my-view-web/"><link rel="canonical" href="https://tintailouge.github.io/my-view-web/2026/07/05/hello-game-design/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/my-view-web/css/index.css?v=5.5.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fffef8')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/my-view-web/',
+  algolia: undefined,
+  localSearch: {"path":"/my-view-web/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '从关卡设计谈起——什么是好的引导',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/game-card.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div class="bg-animation" id="web_bg" style="background-color: #fffef8;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/my-view-web/null" onerror="this.onerror=null;this.src='/my-view-web/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/my-view-web/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/my-view-web/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/my-view-web/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/my-view-web/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/my-view-web/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/my-view-web/categories/"><i class="fa-fw fas fa-folder"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/my-view-web/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/my-view-web/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/my-view-web/"><span class="site-name">游戏策划小站</span></a><a class="nav-page-title" href="/my-view-web/"><span class="site-name">从关卡设计谈起——什么是好的引导</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/my-view-web/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/my-view-web/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/my-view-web/categories/"><i class="fa-fw fas fa-folder"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/my-view-web/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/my-view-web/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">从关卡设计谈起——什么是好的引导</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-05T03:25:30.000Z" title="发表于 2026-07-05 11:25:30">2026-07-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-05T03:25:56.572Z" title="更新于 2026-07-05 11:25:56">2026-07-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/my-view-web/categories/%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%80%83/">设计思考</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">742</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="看不见的老师"><a href="#看不见的老师" class="headerlink" title="看不见的老师"></a>看不见的老师</h2><p>你有没有过这种体验：第一次玩某个游戏，没有任何教程弹窗，没有人告诉你「按 A 跳跃」「按 B 攻击」，但你<strong>自然而然地就学会了</strong>。你顺着一条走廊走，尽头有一道光，你走过去，门自动开了——你什么都没被告知，但你知道了「方向」。</p>
+<p>这就是<strong>关卡设计中的隐性引导</strong>。</p>
+<hr>
+<h2 id="三种引导方式"><a href="#三种引导方式" class="headerlink" title="三种引导方式"></a>三种引导方式</h2><h3 id="1-视觉引导"><a href="#1-视觉引导" class="headerlink" title="1. 视觉引导"></a>1. 视觉引导</h3><p>人类的眼睛天生会被某些东西吸引：</p>
+<ul>
+<li><strong>光</strong> — 黑暗中的亮处，永远是玩家会去的地方。Portal 系列做得极好</li>
+<li><strong>颜色对比</strong> — 《镜之边缘》的红色引导路线是教科书级别的案例</li>
+<li><strong>形状语言</strong> — 尖的&#x3D;危险，圆的&#x3D;安全。这是刻在我们 DNA 里的</li>
+</ul>
+<h3 id="2-空间引导"><a href="#2-空间引导" class="headerlink" title="2. 空间引导"></a>2. 空间引导</h3><p>HL2 有名的「运河关卡」，你不需要地图，因为水流本身就是方向。任天堂的设计师说过：<strong>如果你需要在地图上画箭头，说明你的关卡设计还不够好。</strong></p>
+<p>在《旷野之息》中，你从初始台地往任何方向看，都能看到至少一个有吸引力的目标——高塔、神庙、奇特的地形。你「自由探索」，但设计师其实早就安排好了你的注意力走向。</p>
+<h3 id="3-机制引导"><a href="#3-机制引导" class="headerlink" title="3. 机制引导"></a>3. 机制引导</h3><p>最难也最优雅的方式。《超级马力欧兄弟》的 1-1 关卡是每个游戏设计师都应该背诵的经典：</p>
+<p>那个第一个遇到的蘑菇敌人——在你第一次见到它之前，没有任何文字告诉你「可以踩死敌人」。但地形设计让你天然地从上方接近它。你跳起来踩到了它。<strong>你觉得自己很聪明</strong>——这正是好的引导要达到的效果。</p>
+<hr>
+<h2 id="好的引导让玩家觉得自己是天才"><a href="#好的引导让玩家觉得自己是天才" class="headerlink" title="好的引导让玩家觉得自己是天才"></a>好的引导让玩家觉得自己是天才</h2><p>这句话值得拆开来看：</p>
+<table>
+<thead>
+<tr>
+<th>差引导</th>
+<th>好引导</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>「按 X 使用钩爪」</td>
+<td>你看到对面有个抓钩点，你试了一下，飞过去了</td>
+</tr>
+<tr>
+<td>弹窗告诉你机制</td>
+<td>环境让你自然发现机制</td>
+</tr>
+<tr>
+<td>玩家被「教」了</td>
+<td>玩家「发现」了</td>
+</tr>
+</tbody></table>
+<p>心理学的<strong>自我决定理论</strong>（SDT）指出，自主性是内在动机的核心。当你「教会」玩家时，他们服从了系统。当你让他们自己发现时，他们获得了掌控感。</p>
+<hr>
+<h2 id="一个练习"><a href="#一个练习" class="headerlink" title="一个练习"></a>一个练习</h2><p>下次你做关卡设计时，试试这个：</p>
+<ol>
+<li>写下你要传达给玩家的<strong>三个核心信息</strong></li>
+<li>删掉所有文字教程</li>
+<li>仅用空间、光线、颜色、声音来传达这三个信息</li>
+<li>找一个没玩过的人测试——看他们能否「自然」地理解</li>
+</ol>
+<p>你会发现这个过程极其困难，但也极其有价值。</p>
+<hr>
+<p><em>这是我博客的第一篇文章。后续我会持续分享更多关于游戏设计、关卡构建和玩家体验的思考。欢迎在评论区交流你的观点。</em></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://tintailouge.github.io/my-view-web">游戏策划</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://tintailouge.github.io/my-view-web/2026/07/05/hello-game-design/">https://tintailouge.github.io/my-view-web/2026/07/05/hello-game-design/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://tintailouge.github.io/my-view-web" target="_blank">游戏策划小站</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/my-view-web/tags/%E5%85%B3%E5%8D%A1%E8%AE%BE%E8%AE%A1/">关卡设计</a><a class="post-meta__tags" href="/my-view-web/tags/%E7%8E%A9%E5%AE%B6%E5%BC%95%E5%AF%BC/">玩家引导</a><a class="post-meta__tags" href="/my-view-web/tags/%E6%B8%B8%E6%88%8F%E5%88%86%E6%9E%90/">游戏分析</a></div><div class="post-share"><div class="social-share" data-image="/my-view-web/null" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/my-view-web/2026/07/03/hello-world/" title="游戏策划的工具箱——我每天在用的设计工具"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">游戏策划的工具箱——我每天在用的设计工具</div></div><div class="info-2"><div class="info-item-1">策划的工作台游戏策划这个岗位，最容易被误解的一点是：「策划就是写文档的」。 当然，文档很重要。但策划的工作远不止如此——你要画流程图、搭数值模型、做原型验证、管理需求池、做竞品拆解……每一项任务都需要趁手的工具。 今天分享一下我的工具链。  文档与协作Notion &#x2F; 飞书文档设计文档的版本管理曾经是个噩梦。GDD（游戏设计文档）动辄几十页，用 Word 传来传去简直是灾难。 现在我用 Notion 来管理所有设计文档：  数据库视图快速筛选 关联属性把系统文档和数值表连起来 评论功能替代了无休止的「需求评审会」  Miro &#x2F; FigJam白板工具在远程协作时代变得...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/my-view-web/null" onerror="this.onerror=null;this.src='/my-view-web/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">游戏策划</div><div class="author-info-description">游戏策划 · 设计思考者</div><div class="site-data"><a href="/my-view-web/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/my-view-web/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/my-view-web/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">🎮 欢迎来到我的游戏设计笔记！<br>这里记录着关于关卡设计、叙事系统和玩家体验的思考。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9C%8B%E4%B8%8D%E8%A7%81%E7%9A%84%E8%80%81%E5%B8%88"><span class="toc-number">1.</span> <span class="toc-text">看不见的老师</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E5%BC%95%E5%AF%BC%E6%96%B9%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">三种引导方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%A7%86%E8%A7%89%E5%BC%95%E5%AF%BC"><span class="toc-number">2.1.</span> <span class="toc-text">1. 视觉引导</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%A9%BA%E9%97%B4%E5%BC%95%E5%AF%BC"><span class="toc-number">2.2.</span> <span class="toc-text">2. 空间引导</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9C%BA%E5%88%B6%E5%BC%95%E5%AF%BC"><span class="toc-number">2.3.</span> <span class="toc-text">3. 机制引导</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A5%BD%E7%9A%84%E5%BC%95%E5%AF%BC%E8%AE%A9%E7%8E%A9%E5%AE%B6%E8%A7%89%E5%BE%97%E8%87%AA%E5%B7%B1%E6%98%AF%E5%A4%A9%E6%89%8D"><span class="toc-number">3.</span> <span class="toc-text">好的引导让玩家觉得自己是天才</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E7%BB%83%E4%B9%A0"><span class="toc-number">4.</span> <span class="toc-text">一个练习</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/my-view-web/2026/07/05/hello-game-design/" title="从关卡设计谈起——什么是好的引导">从关卡设计谈起——什么是好的引导</a><time datetime="2026-07-05T03:25:30.000Z" title="发表于 2026-07-05 11:25:30">2026-07-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/my-view-web/2026/07/03/hello-world/" title="游戏策划的工具箱——我每天在用的设计工具">游戏策划的工具箱——我每天在用的设计工具</a><time datetime="2026-07-03T07:00:00.000Z" title="发表于 2026-07-03 15:00:00">2026-07-03</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By 游戏策划</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/my-view-web/js/utils.js?v=5.5.5"></script><script src="/my-view-web/js/main.js?v=5.5.5"></script><div class="js-pjax"></div><script src="/js/game-card.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/my-view-web/js/search/local-search.js?v=5.5.5"></script></div></div></body></html>

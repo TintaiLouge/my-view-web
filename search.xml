@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>从关卡设计谈起——什么是好的引导</title>
+      <link href="/my-view-web/2026/07/05/hello-game-design/"/>
+      <url>/my-view-web/2026/07/05/hello-game-design/</url>
+      
+        <content type="html"><![CDATA[<h2 id="看不见的老师"><a href="#看不见的老师" class="headerlink" title="看不见的老师"></a>看不见的老师</h2><p>你有没有过这种体验：第一次玩某个游戏，没有任何教程弹窗，没有人告诉你「按 A 跳跃」「按 B 攻击」，但你<strong>自然而然地就学会了</strong>。你顺着一条走廊走，尽头有一道光，你走过去，门自动开了——你什么都没被告知，但你知道了「方向」。</p><p>这就是<strong>关卡设计中的隐性引导</strong>。</p><hr><h2 id="三种引导方式"><a href="#三种引导方式" class="headerlink" title="三种引导方式"></a>三种引导方式</h2><h3 id="1-视觉引导"><a href="#1-视觉引导" class="headerlink" title="1. 视觉引导"></a>1. 视觉引导</h3><p>人类的眼睛天生会被某些东西吸引：</p><ul><li><strong>光</strong> — 黑暗中的亮处，永远是玩家会去的地方。Portal 系列做得极好</li><li><strong>颜色对比</strong> — 《镜之边缘》的红色引导路线是教科书级别的案例</li><li><strong>形状语言</strong> — 尖的&#x3D;危险，圆的&#x3D;安全。这是刻在我们 DNA 里的</li></ul><h3 id="2-空间引导"><a href="#2-空间引导" class="headerlink" title="2. 空间引导"></a>2. 空间引导</h3><p>HL2 有名的「运河关卡」，你不需要地图，因为水流本身就是方向。任天堂的设计师说过：<strong>如果你需要在地图上画箭头，说明你的关卡设计还不够好。</strong></p><p>在《旷野之息》中，你从初始台地往任何方向看，都能看到至少一个有吸引力的目标——高塔、神庙、奇特的地形。你「自由探索」，但设计师其实早就安排好了你的注意力走向。</p><h3 id="3-机制引导"><a href="#3-机制引导" class="headerlink" title="3. 机制引导"></a>3. 机制引导</h3><p>最难也最优雅的方式。《超级马力欧兄弟》的 1-1 关卡是每个游戏设计师都应该背诵的经典：</p><p>那个第一个遇到的蘑菇敌人——在你第一次见到它之前，没有任何文字告诉你「可以踩死敌人」。但地形设计让你天然地从上方接近它。你跳起来踩到了它。<strong>你觉得自己很聪明</strong>——这正是好的引导要达到的效果。</p><hr><h2 id="好的引导让玩家觉得自己是天才"><a href="#好的引导让玩家觉得自己是天才" class="headerlink" title="好的引导让玩家觉得自己是天才"></a>好的引导让玩家觉得自己是天才</h2><p>这句话值得拆开来看：</p><table><thead><tr><th>差引导</th><th>好引导</th></tr></thead><tbody><tr><td>「按 X 使用钩爪」</td><td>你看到对面有个抓钩点，你试了一下，飞过去了</td></tr><tr><td>弹窗告诉你机制</td><td>环境让你自然发现机制</td></tr><tr><td>玩家被「教」了</td><td>玩家「发现」了</td></tr></tbody></table><p>心理学的<strong>自我决定理论</strong>（SDT）指出，自主性是内在动机的核心。当你「教会」玩家时，他们服从了系统。当你让他们自己发现时，他们获得了掌控感。</p><hr><h2 id="一个练习"><a href="#一个练习" class="headerlink" title="一个练习"></a>一个练习</h2><p>下次你做关卡设计时，试试这个：</p><ol><li>写下你要传达给玩家的<strong>三个核心信息</strong></li><li>删掉所有文字教程</li><li>仅用空间、光线、颜色、声音来传达这三个信息</li><li>找一个没玩过的人测试——看他们能否「自然」地理解</li></ol><p>你会发现这个过程极其困难，但也极其有价值。</p><hr><p><em>这是我博客的第一篇文章。后续我会持续分享更多关于游戏设计、关卡构建和玩家体验的思考。欢迎在评论区交流你的观点。</em></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计思考 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 关卡设计 </tag>
+            
+            <tag> 玩家引导 </tag>
+            
+            <tag> 游戏分析 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>游戏策划的工具箱——我每天在用的设计工具</title>
+      <link href="/my-view-web/2026/07/03/hello-world/"/>
+      <url>/my-view-web/2026/07/03/hello-world/</url>
+      
+        <content type="html"><![CDATA[<h2 id="策划的工作台"><a href="#策划的工作台" class="headerlink" title="策划的工作台"></a>策划的工作台</h2><p>游戏策划这个岗位，最容易被误解的一点是：「策划就是写文档的」。</p><p>当然，文档很重要。但策划的工作远不止如此——你要画流程图、搭数值模型、做原型验证、管理需求池、做竞品拆解……每一项任务都需要趁手的工具。</p><p>今天分享一下我的工具链。</p><hr><h2 id="文档与协作"><a href="#文档与协作" class="headerlink" title="文档与协作"></a>文档与协作</h2><h3 id="Notion-飞书文档"><a href="#Notion-飞书文档" class="headerlink" title="Notion &#x2F; 飞书文档"></a>Notion &#x2F; 飞书文档</h3><p>设计文档的版本管理曾经是个噩梦。GDD（游戏设计文档）动辄几十页，用 Word 传来传去简直是灾难。</p><p>现在我用 <strong>Notion</strong> 来管理所有设计文档：</p><ul><li>数据库视图快速筛选</li><li>关联属性把系统文档和数值表连起来</li><li>评论功能替代了无休止的「需求评审会」</li></ul><h3 id="Miro-FigJam"><a href="#Miro-FigJam" class="headerlink" title="Miro &#x2F; FigJam"></a>Miro &#x2F; FigJam</h3><p>白板工具在远程协作时代变得无比重要。画系统架构图、UI 流程图、甚至临时的情绪曲线，拖拽即完成。</p><hr><h2 id="数值与表格"><a href="#数值与表格" class="headerlink" title="数值与表格"></a>数值与表格</h2><h3 id="Excel-Google-Sheets"><a href="#Excel-Google-Sheets" class="headerlink" title="Excel &#x2F; Google Sheets"></a>Excel &#x2F; Google Sheets</h3><p>不管你用什么花哨的工具，<strong>Excel 永远是策划的最终归宿</strong>。</p><p>我的典型 Sheet 结构：</p><ol><li><strong>参数页</strong> — 所有可调参数集中管理</li><li><strong>计算页</strong> — 战斗公式、经济模型的推导</li><li><strong>模拟页</strong> — 蒙特卡洛模拟战斗结果</li><li><strong>输出页</strong> — 只读，给程序和美术看的最终数值</li></ol><blockquote><p>一个建议：<strong>永远不要把参数硬编码在公式里。</strong> 哪怕只是 <code>攻击力 * 1.5</code>，也要把 1.5 抽到参数区命名成 <code>暴击伤害倍率</code>。你会感谢自己的。</p></blockquote><hr><h2 id="原型与验证"><a href="#原型与验证" class="headerlink" title="原型与验证"></a>原型与验证</h2><h3 id="Axure-Figma"><a href="#Axure-Figma" class="headerlink" title="Axure &#x2F; Figma"></a>Axure &#x2F; Figma</h3><p>策划要有能力自己出交互原型。不需要画得多好看（那是 UI 设计师的事），但至少要让程序理解你的意图。</p><p><strong>Figma</strong> 现在是我的主力——组件系统可以复用 UI kit，做交互演示也比 Axure 直观。</p><hr><h2 id="思维与梳理"><a href="#思维与梳理" class="headerlink" title="思维与梳理"></a>思维与梳理</h2><h3 id="XMind"><a href="#XMind" class="headerlink" title="XMind"></a>XMind</h3><p>脑图是策划的通用语言。拆解系统、梳理玩法、分析竞品——脑图都是第一步。</p><p>我的「竞品拆解脑图」标准结构：</p><ul><li>核心循环</li><li>系统架构</li><li>商业化路径</li><li>用户体验曲线</li></ul><hr><h2 id="最后的建议"><a href="#最后的建议" class="headerlink" title="最后的建议"></a>最后的建议</h2><p>工具是手段，不是目的。选工具的原则就一条：<strong>降低你从想法到可验证方案的摩擦力。</strong></p><p>如果你发现自己在调 Notion 的排版而不是写设计思路，那说明你用错重点了。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 策划随笔 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 工具 </tag>
+            
+            <tag> 游戏策划 </tag>
+            
+            <tag> 效率 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
