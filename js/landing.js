@@ -1,20 +1,12 @@
 /**
  * ============================================
- * JINGYU · Landing Overlay
- * 3D 透视卡片 / 视差分层 / 投影美学
+ * JINGYU · Landing Page （单卡片主页）
+ * 3D 透视 / 视差分层 / 每次进入
  * ============================================
  */
 
 (function () {
   'use strict';
-
-  var STORAGE_KEY = 'jingyu_entered';
-
-  // 已进入过 → 跳过
-  if (sessionStorage.getItem(STORAGE_KEY) === 'true') {
-    document.documentElement.classList.remove('landing-locked');
-    return;
-  }
 
   // 仅首页显示
   var isHome = (function () {
@@ -22,7 +14,6 @@
       if (typeof GLOBAL_CONFIG_SITE !== 'undefined' &&
           GLOBAL_CONFIG_SITE.pageType === 'home') return true;
     } catch(e) {}
-    // GitHub Pages 子目录兼容
     var path = window.location.pathname.replace(/\/+$/, '');
     var base = path.split('/').pop();
     return document.body.classList.contains('home') ||
@@ -35,18 +26,17 @@
     return;
   }
 
-  // ── 卡片数据 ──────────────────────────────
-  var cardData = [
-    { title: '关卡设计', subtitle: 'LEVELDESIGN', badge: '核心能力', img: 'images/illustrations/card-1.jpg' },
-    { title: '系统架构', subtitle: 'SYSTEMDESIGN', badge: '核心能力', img: 'images/illustrations/card-2.jpg' },
-    { title: '叙事体验', subtitle: 'NARRATIVE', badge: '设计方向', img: 'images/illustrations/card-3.jpg' },
-    { title: '设计工具', subtitle: 'TOOLS&CRAFT', badge: '工具箱', img: 'images/illustrations/card-4.jpg' },
-    { title: '作品集', subtitle: 'PORTFOLIO', badge: '成果展示', img: 'images/illustrations/card-5.jpg' },
-  ];
+  // ── 卡片数据（默认值，可被 landing-config.json 覆盖）──────
+  var cardConfig = {
+    cardImage: 'images/illustrations/card-1.jpg',
+    cardTitle: 'JINGYU',
+    cardSubtitle: 'GAMEDESIGN PORTFOLIO',
+    cardBadge: '作品集'
+  };
 
   // ── 工具 ──────────────────────────────────
   var rotate = function (cursorPos, centerPos, threshold) {
-    threshold = threshold || 22;
+    threshold = threshold || 25;
     var delta = cursorPos - centerPos;
     return delta >= 0 ?
       (delta >= threshold ? threshold : delta) :
@@ -54,63 +44,73 @@
   };
 
   var brightness = function (cursorY, centerY, strength) {
-    strength = strength || 20;
+    strength = strength || 22;
     return 1 - rotate(cursorY, centerY) / strength * 0.05;
   };
 
-  var cardCenters = new Map();
+  var cardCenter = null;
+
+  // ── 背景图片池（用仓库已有图） ────────────
+  var bgImages = [
+    'images/bg/honkai_all.jpg',
+    'images/bg/sekai_03.jpg',
+    'images/bg/fate01.jpg',
+    'images/bg/cerydra.jpg',
+  ];
 
   // ── 构建浮层 ──────────────────────────────
   function createOverlay() {
     var overlay = document.createElement('div');
     overlay.id = 'landing-overlay';
 
-    // 3D 舞台
-    var stage = document.createElement('div');
-    stage.className = 'landing-stage';
-
-    for (var i = 0; i < cardData.length; i++) {
-      var d = cardData[i];
-
-      var container = document.createElement('div');
-      container.className = 'landing-card-container';
-
-      var card = document.createElement('div');
-      card.className = 'landing-card';
-      card.style.setProperty('--float-delay', (i * 0.7) + 's');
-
-      card.innerHTML =
-        '<div class="landing-card-bg"></div>' +
-        // 点阵装饰
-        '<div class="landing-image-area"><div class="landing-dot-pattern"></div></div>' +
-        // 主图
-        '<div class="landing-image-area" style="overflow:inherit;">' +
-        '  <div class="landing-image-main" style="left:0;top:0;filter:none;">' +
-        '    <img src="' + d.img + '" alt="' + d.title + '" loading="eager">' +
-        '  </div>' +
-        '</div>' +
-        // 叠加层（反相）
-        '<div class="landing-overlay-area" style="transform:translateZ(0) scale(1);">' +
-        '  <div class="landing-overlay-img">' +
-        '    <div class="landing-brand-mark">JINGYU</div>' +
-        '  </div>' +
-        '</div>' +
-        // Badge + 阴影
-        '<div class="landing-badge">' + d.badge + '</div>' +
-        '<div class="landing-badge-shadow"></div>' +
-        // 标题
-        '<div class="landing-title">' + d.title + '</div>' +
-        '<div class="landing-subtitle">' + d.subtitle + '</div>';
-
-      // 点击进入
-      card.addEventListener('click', function () {
-        enterSite(overlay);
-      });
-
-      container.appendChild(card);
-      stage.appendChild(container);
+    // 背景氛围层
+    var bgLayer = document.createElement('div');
+    bgLayer.className = 'landing-bg';
+    // 随机选3张做背景装饰
+    var picked = bgImages.sort(function () { return Math.random() - 0.5; }).slice(0, 3);
+    for (var b = 0; b < 3; b++) {
+      var img = document.createElement('img');
+      img.className = 'landing-bg-img';
+      img.src = picked[b];
+      bgLayer.appendChild(img);
     }
-    overlay.appendChild(stage);
+    overlay.appendChild(bgLayer);
+
+    // 背景点阵
+    var dots = document.createElement('div');
+    dots.className = 'landing-bg-dots';
+    overlay.appendChild(dots);
+
+    // 卡片容器
+    var container = document.createElement('div');
+    container.className = 'landing-card-container';
+
+    var card = document.createElement('div');
+    card.className = 'landing-card';
+
+    card.innerHTML =
+      '<div class="landing-card-bg"></div>' +
+      '<div class="landing-image-area"><div class="landing-dot-pattern"></div></div>' +
+      '<div class="landing-image-area" style="overflow:inherit;">' +
+      '  <div class="landing-image-main" style="left:0;top:0;filter:none;">' +
+      '    <img src="' + cardConfig.cardImage + '" alt="' + cardConfig.cardTitle + '" loading="eager">' +
+      '  </div>' +
+      '</div>' +
+      '<div class="landing-overlay-area" style="transform:translateZ(0) scale(1);">' +
+      '  <div class="landing-overlay-img">' +
+      '    <div class="landing-brand-mark">' + cardConfig.cardTitle + '</div>' +
+      '  </div>' +
+      '</div>' +
+      '<div class="landing-badge">' + cardConfig.cardBadge + '</div>' +
+      '<div class="landing-badge-shadow"></div>' +
+      '<div class="landing-title">' + cardConfig.cardTitle + '</div>' +
+      '<div class="landing-subtitle">' + cardConfig.cardSubtitle + '</div>';
+
+    card.addEventListener('click', function () {
+      enterSite(overlay);
+    });
+    container.appendChild(card);
+    overlay.appendChild(container);
 
     // CTA
     var cta = document.createElement('div');
@@ -124,11 +124,9 @@
     overlay.appendChild(cta);
 
     document.body.appendChild(overlay);
+    initTracking(card);
 
-    // 初始化追踪
-    initTracking();
-
-    // 键盘进入
+    // 键盘
     document.addEventListener('keydown', function onKey(e) {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -139,130 +137,101 @@
   }
 
   // ── 3D 追踪 ──────────────────────────────
-  function updateCenters() {
-    var cards = document.querySelectorAll('.landing-card');
-    for (var i = 0; i < cards.length; i++) {
-      var rect = cards[i].getBoundingClientRect();
-      cardCenters.set(cards[i], {
-        centerX: rect.left + rect.width / 2,
-        centerY: rect.top + rect.height / 2,
-      });
-    }
+  function updateCenter(card) {
+    var rect = card.getBoundingClientRect();
+    cardCenter = {
+      centerX: rect.left + rect.width / 2,
+      centerY: rect.top + rect.height / 2,
+    };
   }
 
-  function initTracking() {
-    updateCenters();
-    window.addEventListener('resize', updateCenters);
+  function initTracking(card) {
+    updateCenter(card);
+    window.addEventListener('resize', function () { updateCenter(card); });
 
-    // 容器缩放（hover）
-    var containers = document.querySelectorAll('.landing-card-container');
-    for (var c = 0; c < containers.length; c++) {
-      (function (ct) {
-        ct.addEventListener('mouseenter', function () {
-          ct.classList.add('zoomed');
-        });
-        ct.addEventListener('mouseleave', function () {
-          ct.classList.remove('zoomed');
-        });
-      })(containers[c]);
-    }
+    card.addEventListener('mouseenter', function () {
+      updateCenter(card);
+      var oa = card.querySelector('.landing-overlay-area');
+      if (oa) {
+        oa.style.overflow = 'inherit';
+        oa.style.left = '-24px';
+        oa.style.top = '-36px';
+        oa.style.transform = 'scale(0.7)';
+      }
+    });
 
-    // 卡片 3D mousemove
-    var cards = document.querySelectorAll('.landing-card');
-    for (var i = 0; i < cards.length; i++) {
-      (function (card) {
-        card.addEventListener('mouseenter', function () {
-          var rect = card.getBoundingClientRect();
-          cardCenters.set(card, {
-            centerX: rect.left + rect.width / 2,
-            centerY: rect.top + rect.height / 2,
-          });
+    card.addEventListener('mouseleave', function () {
+      card.style.transform = 'perspective(500px) scale(1)';
+      card.style.filter = 'drop-shadow(0 8px 12px rgba(0,0,0,0.4))';
+      card.style.boxShadow = '0 0 0 0 rgba(0,0,0,0.2)';
+      var imgMain = card.querySelector('.landing-image-main');
+      if (imgMain) imgMain.style.cssText = 'left:0;top:0;filter:none;';
+      var oa = card.querySelector('.landing-overlay-area');
+      if (oa) oa.style.cssText = 'left:0;top:0;filter:none;transform:translateZ(0) scale(1);overflow:hidden;';
+      var oi = card.querySelector('.landing-overlay-img');
+      if (oi) oi.style.cssText = 'left:0;top:0;';
+    });
 
-          // 展开 overlay
-          var overlayArea = card.querySelector('.landing-overlay-area');
-          if (overlayArea) {
-            overlayArea.style.overflow = 'inherit';
-            overlayArea.style.left = '-16px';
-            overlayArea.style.top = '-24px';
-            overlayArea.style.transform = 'scale(0.7)';
-          }
-        });
+    card.addEventListener('mousemove', function (e) {
+      if (!cardCenter) return;
+      var calcX = rotate(e.clientX, cardCenter.centerX);
+      var calcY = rotate(e.clientY, cardCenter.centerY);
+      var dx = e.clientX - cardCenter.centerX;
+      var dy = e.clientY - cardCenter.centerY;
 
-        card.addEventListener('mouseleave', function () {
-          card.style.transform = 'perspective(500px) scale(1)';
-          card.style.filter = 'drop-shadow(0 6px 8px rgba(0,0,0,0.45))';
-          card.style.boxShadow = '0 0 0 0 rgba(0,0,0,0.2)';
+      card.style.transform =
+        'translateZ(0) perspective(1000px) rotateY(' + calcX + 'deg) rotateX(' + (-calcY / 1.5) + 'deg)';
+      card.style.filter = 'brightness(' + brightness(e.clientY, cardCenter.centerY) + ')';
+      card.style.boxShadow = (-calcX) + 'px ' + (-calcY) + 'px 12px 0 rgba(0,0,20,0.25)';
 
-          var imgMain = card.querySelector('.landing-image-main');
-          if (imgMain) { imgMain.style.cssText = 'left:0;top:0;filter:none;'; }
+      var oi = card.querySelector('.landing-overlay-img');
+      if (oi) { oi.style.left = (dx / 10) + 'px'; oi.style.top = (dy / 15) + 'px'; }
 
-          var overlayArea = card.querySelector('.landing-overlay-area');
-          if (overlayArea) {
-            overlayArea.style.cssText = 'left:0;top:0;filter:none;transform:translateZ(0) scale(1);overflow:hidden;';
-          }
+      var oa = card.querySelector('.landing-overlay-area');
+      if (oa) oa.style.filter = 'drop-shadow(' + (-calcX/7) + 'px ' + (-calcY/7) + 'px 0 white)';
 
-          var overlayImg = card.querySelector('.landing-overlay-img');
-          if (overlayImg) { overlayImg.style.cssText = 'left:0;top:0;'; }
-        });
-
-        card.addEventListener('mousemove', function (e) {
-          var data = cardCenters.get(card);
-          if (!data) return;
-
-          var calcX = rotate(e.clientX, data.centerX);
-          var calcY = rotate(e.clientY, data.centerY);
-          var dx = e.clientX - data.centerX;
-          var dy = e.clientY - data.centerY;
-
-          // 3D 旋转
-          card.style.transform =
-            'translateZ(0) perspective(1000px) rotateY(' + calcX + 'deg) rotateX(' + (-calcY / 1.5) + 'deg)';
-          card.style.filter = 'brightness(' + brightness(e.clientY, data.centerY) + ')';
-          card.style.boxShadow = (-calcX) + 'px ' + (-calcY) + 'px 10px 0 rgba(0,0,20,0.25)';
-
-          // 叠加层视差
-          var overlayImg = card.querySelector('.landing-overlay-img');
-          if (overlayImg) {
-            overlayImg.style.left = (dx / 10) + 'px';
-            overlayImg.style.top = (dy / 15) + 'px';
-          }
-
-          var overlayArea = card.querySelector('.landing-overlay-area');
-          if (overlayArea) {
-            overlayArea.style.filter = 'drop-shadow(' + (-calcX / 7) + 'px ' + (-calcY / 7) + 'px 0 white)';
-          }
-
-          // 主图视差
-          var imgMain = card.querySelector('.landing-image-main');
-          if (imgMain) {
-            imgMain.style.left = (dx / 8) + 'px';
-            imgMain.style.top = (dy / 13) + 'px';
-            imgMain.style.filter = 'drop-shadow(' + (-calcX / 2) + 'px ' + (-calcY / 2) + 'px 5px rgba(0,0,20,0.2))';
-          }
-        });
-      })(cards[i]);
-    }
+      var im = card.querySelector('.landing-image-main');
+      if (im) {
+        im.style.left = (dx / 8) + 'px';
+        im.style.top = (dy / 13) + 'px';
+        im.style.filter = 'drop-shadow(' + (-calcX/2) + 'px ' + (-calcY/2) + 'px 5px rgba(0,0,20,0.2))';
+      }
+    });
   }
 
   // ── 进入站点 ──────────────────────────────
   function enterSite(overlay) {
     if (overlay.classList.contains('landing-exit')) return;
     overlay.classList.add('landing-exit');
-
     setTimeout(function () {
-      sessionStorage.setItem(STORAGE_KEY, 'true');
       document.documentElement.classList.remove('landing-locked');
-      if (overlay.parentNode) {
-        overlay.parentNode.removeChild(overlay);
-      }
-    }, 700);
+      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    }, 600);
   }
 
-  // ── 启动 ──────────────────────────────────
+  // ── 加载配置并启动 ────────────────────────
+  function boot() {
+    // 尝试加载配置文件
+    fetch('landing-config.json')
+      .then(function (r) { return r.json(); })
+      .then(function (cfg) {
+        if (cfg.cardImage) cardConfig.cardImage = cfg.cardImage;
+        if (cfg.cardTitle) cardConfig.cardTitle = cfg.cardTitle;
+        if (cfg.cardSubtitle) cardConfig.cardSubtitle = cfg.cardSubtitle;
+        if (cfg.cardBadge) cardConfig.cardBadge = cfg.cardBadge;
+      })
+      .catch(function () {
+        // 使用默认值
+      })
+      .finally(function () {
+        createOverlay();
+      });
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createOverlay);
+    document.addEventListener('DOMContentLoaded', boot);
   } else {
-    createOverlay();
+    boot();
   }
 
 })();
