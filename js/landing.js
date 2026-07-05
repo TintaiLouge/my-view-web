@@ -19,8 +19,8 @@
   if (!isHome) { document.documentElement.classList.remove('landing-locked'); return; }
 
   // ── 配置（图片换为自己的）──────────────
-  var cardImage = 'images/illustrations/card-1.jpg';
-  var brandImage = 'images/covers/iuno.jpg';
+  var cardImage = 'images/illustrations/fami_抠图.png';
+  var brandImage = 'images/covers/iuno-抠图.png';
 
   // ── 工具（和原版一样）───────────────────
   var rotate = function (cursorPosition, centerPosition, threshold) {
