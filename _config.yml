@@ -102,5 +102,8 @@ theme: butterfly
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   - type: git
+    repo: https://pure-2-pure:5b1e588900343904eb2808c8b3ee5ca8@gitee.com/pure-2-pure/gitee-my-view-web.git
+    branch: gitee-pages
+  - type: git
     repo: https://github.com/TintaiLouge/my-view-web.git
     branch: gh-pages
