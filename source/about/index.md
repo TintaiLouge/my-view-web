@@ -44,4 +44,11 @@ type: about
 
 ---
 
-*Open to opportunities. 欢迎交流与合作。*
+---
+
+### 联系方式
+
+- **Email**: [2240656737@qq.com](mailto:2240656737@qq.com)
+- **WeChat**: LJY67100000
+
+*欢迎交流与合作。*

@@ -39,7 +39,8 @@ code_blocks:
 
 # Social media links
 social:
-  fab fa-github: https://github.com/ || GitHub || '#24292e'
+  fas fa-envelope: mailto:2240656737@qq.com || Email || '#5b9cf5'
+  fab fa-weixin: "https://weixin.qq.com/ || WeChat: LJY67100000 || '#40c8e0'"
 
 # --------------------------------------
 # Image Settings
@@ -48,7 +49,7 @@ social:
 favicon:
 
 avatar:
-  img: /images/illustrations/avatar-placeholder.svg
+  img: /images/illustrations/avatar.jpg
   effect: true
 
 disable_top_img: false
@@ -228,12 +229,12 @@ aside:
     description: Game Designer · System Architect · Narrative Designer
     button:
       enable: true
-      icon: fab fa-github
-      text: GitHub
-      link: https://github.com/TintaiLouge
+      icon: fas fa-envelope
+      text: 联系我
+      link: mailto:2240656737@qq.com
   card_announcement:
     enable: true
-    content: 『 设计即体验 』<br><br>专注游戏系统架构与叙事设计，<br>追求玩家体验的每一帧极致。
+    content: 『 设计即体验 』<br><br>专注游戏系统架构与叙事设计，<br>追求玩家体验的每一帧极致。<br><br><span style="font-size:0.82em;color:#8a9bb5;">📧 2240656737@qq.com<br>💬 WeChat LJY67100000</span>
   card_recent_post:
     enable: true
     limit: 5
@@ -965,7 +966,10 @@ css_prefix: true
 inject:
   head:
     - <link rel="stylesheet" href="/css/game-card.css">
+    - <link rel="stylesheet" href="/css/landing.css">
+    - <script>document.documentElement.classList.add('landing-locked')</script>
   bottom:
+    - <script src="/js/landing.js"></script>
     - <script src="/js/game-card.js"></script>
 
 # CDN Settings

@@ -4,7 +4,7 @@ date: 2026-07-03 15:00:00
 tags: [工具, 游戏策划, 效率]
 categories: 策划随笔
 description: 从文档到原型，从表格到脑图，一个游戏策划的日常工具链分享
-cover: /images/cover-tools.svg
+cover: /images/covers/cover-tools.jpg
 ---
 
 ## 策划的工作台

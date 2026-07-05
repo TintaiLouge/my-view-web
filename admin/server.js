@@ -41,6 +41,10 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
+// /login 路由 — 未登录时重定向到这里，直接返回登录页
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 app.use('/preview', express.static(path.join(ROOT, 'public')));
 
 // 登录路由

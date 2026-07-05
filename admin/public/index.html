@@ -4,114 +4,394 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JINGYU · Blog Admin</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
   :root {
-    --bg: #0a0e17;
-    --panel: #111827;
+    --bg: #060b14;
+    --panel: rgba(14, 24, 46, 0.7);
+    --panel-solid: #0e182e;
     --border: rgba(255,255,255,0.06);
-    --accent: #6ea8fe;
-    --text: #e0e5ec;
-    --dim: #6b7280;
+    --border-hover: rgba(140, 180, 255, 0.15);
+    --accent: #5b9cf5;
+    --accent-glow: #8ec5ff;
+    --accent-neon: #40c8e0;
+    --text: #e4ecf7;
+    --dim: #556278;
     --green: #34d399;
     --red: #f87171;
+    --radius-sm: 4px;
     --radius: 6px;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family: "PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); display:flex; height:100vh; overflow:hidden; }
+  body {
+    font-family: "PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display:flex;
+    height:100vh;
+    overflow:hidden;
+    letter-spacing:0.3px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* 背景纹理 */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+    background-size:32px 32px;
+    pointer-events:none; z-index:-1;
+  }
 
   /* 侧边栏 */
-  .sidebar { width:220px; background:var(--panel); border-right:1px solid var(--border); display:flex; flex-direction:column; padding:20px 0; flex-shrink:0; }
-  .sidebar .logo { padding:0 20px 24px; font-size:1.3rem; font-weight:900; letter-spacing:3px; color:#fff; border-bottom:1px solid var(--border); margin-bottom:12px; }
-  .sidebar .logo span { font-size:0.6rem; color:var(--dim); letter-spacing:1px; display:block; margin-top:2px; }
-  .nav-item { padding:10px 20px; cursor:pointer; display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--dim); transition:all 0.2s; border-left:2px solid transparent; letter-spacing:0.5px; }
-  .nav-item:hover { color:var(--text); background:rgba(255,255,255,0.02); }
-  .nav-item.active { color:var(--accent); background:rgba(110,168,254,0.06); border-left-color:var(--accent); }
-  .nav-item .icon { width:20px; text-align:center; font-size:1rem; }
-  .sidebar .footer { margin-top:auto; padding:16px 20px; font-size:0.7rem; color:var(--dim); border-top:1px solid var(--border); }
+  .sidebar {
+    width:230px;
+    background:var(--panel);
+    backdrop-filter:blur(24px) saturate(180%);
+    -webkit-backdrop-filter:blur(24px) saturate(180%);
+    border-right:1px solid var(--border);
+    display:flex; flex-direction:column;
+    padding:20px 0;
+    flex-shrink:0;
+    z-index:10;
+  }
+  .sidebar .logo {
+    padding:0 20px 20px;
+    font-size:1.3rem; font-weight:900;
+    letter-spacing:3px; color:#fff;
+    border-bottom:1px solid var(--border);
+    margin-bottom:12px;
+  }
+  .sidebar .logo span {
+    font-size:0.6rem; color:var(--dim);
+    letter-spacing:1px; display:block; margin-top:2px;
+  }
+  .nav-item {
+    padding:10px 20px; cursor:pointer;
+    display:flex; align-items:center; gap:9px;
+    font-size:0.85rem; color:var(--dim);
+    transition:all 0.3s var(--ease-out);
+    border-left:2px solid transparent;
+    letter-spacing:0.5px; margin:0 0 1px;
+  }
+  .nav-item:hover {
+    color:var(--text);
+    background:rgba(255,255,255,0.02);
+  }
+  .nav-item.active {
+    color:var(--accent);
+    background:rgba(91,156,245,0.06);
+    border-left-color:var(--accent);
+  }
+  .nav-item i { width:20px; text-align:center; font-size:0.95rem; }
+  .sidebar .footer {
+    margin-top:auto; padding:16px 20px;
+    font-size:0.7rem; color:var(--dim);
+    border-top:1px solid var(--border);
+  }
 
   /* 主区 */
   .main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
-  .toolbar { height:52px; background:var(--panel); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 24px; gap:12px; flex-shrink:0; }
+  .toolbar {
+    height:52px;
+    background:var(--panel);
+    backdrop-filter:blur(24px) saturate(180%);
+    -webkit-backdrop-filter:blur(24px) saturate(180%);
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center;
+    padding:0 24px; gap:12px;
+    flex-shrink:0;
+  }
   .toolbar h2 { font-size:1rem; font-weight:700; letter-spacing:1px; }
   .toolbar .actions { margin-left:auto; display:flex; gap:8px; }
   .content { flex:1; overflow-y:auto; padding:24px; }
 
   /* 按钮 */
-  .btn { padding:7px 18px; border-radius:var(--radius); border:1px solid var(--border); background:rgba(255,255,255,0.04); color:var(--text); cursor:pointer; font-size:0.8rem; font-weight:600; letter-spacing:0.5px; transition:all 0.2s; white-space:nowrap; }
-  .btn:hover { background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.15); }
-  .btn.primary { background:rgba(110,168,254,0.15); border-color:rgba(110,168,254,0.3); color:var(--accent); }
-  .btn.primary:hover { background:rgba(110,168,254,0.25); }
-  .btn.danger { background:rgba(248,113,113,0.1); border-color:rgba(248,113,113,0.2); color:var(--red); }
-  .btn.danger:hover { background:rgba(248,113,113,0.2); }
-  .btn.green { background:rgba(52,211,153,0.1); border-color:rgba(52,211,153,0.2); color:var(--green); }
+  .btn {
+    padding:7px 16px; border-radius:var(--radius-sm);
+    border:1px solid var(--border);
+    background:rgba(255,255,255,0.03);
+    color:var(--text); cursor:pointer;
+    font-size:0.8rem; font-weight:600;
+    letter-spacing:0.5px;
+    transition:all 0.25s var(--ease-out);
+    white-space:nowrap;
+  }
+  .btn:hover {
+    background:rgba(255,255,255,0.06);
+    border-color:var(--border-hover);
+  }
+  .btn.primary {
+    background:rgba(91,156,245,0.12);
+    border-color:rgba(91,156,245,0.25);
+    color:var(--accent);
+  }
+  .btn.primary:hover {
+    background:rgba(91,156,245,0.2);
+    box-shadow:0 0 18px rgba(91,156,245,0.12);
+  }
+  .btn.danger {
+    background:rgba(248,113,113,0.08);
+    border-color:rgba(248,113,113,0.15);
+    color:var(--red);
+  }
+  .btn.danger:hover { background:rgba(248,113,113,0.16); }
+  .btn.green {
+    background:rgba(52,211,153,0.08);
+    border-color:rgba(52,211,153,0.15);
+    color:var(--green);
+  }
+  .btn.green:hover { background:rgba(52,211,153,0.16); }
   .btn.sm { padding:4px 10px; font-size:0.72rem; }
   .btn:disabled { opacity:0.4; cursor:not-allowed; }
 
   /* 输入框 */
-  input, textarea, select { background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:var(--radius); color:var(--text); padding:8px 12px; font-size:0.85rem; font-family:inherit; outline:none; transition:border-color 0.2s; width:100%; }
-  input:focus, textarea:focus, select:focus { border-color:var(--accent); }
+  input, textarea, select {
+    background:rgba(0,0,0,0.35);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    color:var(--text); padding:9px 12px;
+    font-size:0.85rem; font-family:inherit;
+    outline:none; transition:border-color 0.25s var(--ease-out),
+                box-shadow 0.25s var(--ease-out);
+    width:100%;
+  }
+  input:focus, textarea:focus, select:focus {
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(91,156,245,0.08);
+  }
   textarea { resize:vertical; min-height:100px; }
 
   /* 卡片 */
-  .card { background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:16px; }
-  .card-header { font-weight:700; font-size:0.9rem; margin-bottom:12px; letter-spacing:0.5px; }
+  .card {
+    background:var(--panel);
+    backdrop-filter:blur(16px) saturate(150%);
+    -webkit-backdrop-filter:blur(16px) saturate(150%);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px; margin-bottom:16px;
+  }
+  .card-header {
+    font-weight:700; font-size:0.88rem;
+    margin-bottom:14px; letter-spacing:0.5px;
+    color:var(--text);
+  }
 
   /* 文章列表 */
-  .post-list {}
-  .post-item { display:flex; align-items:center; padding:12px 16px; border:1px solid var(--border); border-radius:var(--radius); margin-bottom:8px; cursor:pointer; transition:all 0.2s; gap:12px; }
-  .post-item:hover { border-color:rgba(255,255,255,0.15); background:rgba(255,255,255,0.02); }
+  .post-item {
+    display:flex; align-items:center;
+    padding:12px 16px;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    margin-bottom:8px; cursor:pointer;
+    transition:all 0.3s var(--ease-out);
+    gap:12px;
+  }
+  .post-item:hover {
+    border-color:var(--border-hover);
+    background:rgba(91,156,245,0.03);
+  }
   .post-item .post-info { flex:1; min-width:0; }
-  .post-item .post-title { font-weight:600; font-size:0.88rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .post-item .post-meta { font-size:0.72rem; color:var(--dim); margin-top:3px; }
+  .post-item .post-title {
+    font-weight:600; font-size:0.88rem;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .post-item .post-meta {
+    font-size:0.72rem; color:var(--dim); margin-top:3px;
+  }
   .post-actions { display:flex; gap:6px; flex-shrink:0; }
 
   /* 图片网格 */
-  .img-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:12px; }
-  .img-card { background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; transition:all 0.2s; }
-  .img-card:hover { border-color:rgba(255,255,255,0.2); }
+  .img-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); gap:12px; }
+  .img-card {
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    overflow:hidden;
+    transition:all 0.3s var(--ease-out);
+  }
+  .img-card:hover {
+    border-color:var(--border-hover);
+    box-shadow:0 4px 16px rgba(0,0,0,0.3);
+  }
   .img-card .preview { width:100%; aspect-ratio:16/10; object-fit:cover; background:rgba(0,0,0,0.3); }
-  .img-card .info { padding:8px 10px; font-size:0.7rem; }
-  .img-card .info .name { color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .img-card .info .size { color:var(--dim); margin-top:2px; }
+  .img-card .info { padding:10px 12px; font-size:0.7rem; }
+  .img-card .info .name {
+    color:var(--text); white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis; margin-bottom:4px;
+  }
+  .img-card .info .size { color:var(--dim); margin-bottom:6px; }
+  .img-card .cdn-row { display:flex; gap:4px; }
+  .img-card .cdn-row input {
+    font-family:monospace; font-size:0.62rem;
+    padding:4px 6px; flex:1; min-width:0;
+  }
+  .img-card .cdn-row .copy-btn {
+    padding:4px 8px; font-size:0.62rem;
+    background:rgba(91,156,245,0.1);
+    border:1px solid rgba(91,156,245,0.2);
+    color:var(--accent); border-radius:3px;
+    cursor:pointer; white-space:nowrap;
+    transition:all 0.2s;
+  }
+  .img-card .cdn-row .copy-btn:hover {
+    background:rgba(91,156,245,0.2);
+  }
 
   /* 编辑区 */
   .editor-layout { display:flex; gap:16px; }
   .editor-left { flex:1; min-width:0; }
-  .editor-right { width:360px; flex-shrink:0; }
+  .editor-right { width:380px; flex-shrink:0; }
   .field { margin-bottom:14px; }
-  .field label { display:block; font-size:0.78rem; color:var(--dim); margin-bottom:4px; font-weight:600; letter-spacing:0.5px; }
-  .preview-pane { background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:20px; min-height:200px; font-size:0.85rem; line-height:1.7; overflow-y:auto; max-height:600px; }
-  .preview-pane h1,.preview-pane h2,.preview-pane h3 { color:#fff; }
-  .preview-pane p { color:#ccc; }
-  .preview-pane code { background:rgba(110,168,254,0.15); color:var(--accent); padding:2px 6px; border-radius:3px; }
-  .preview-pane pre { background:rgba(0,0,0,0.4); padding:12px; border-radius:var(--radius); overflow-x:auto; }
-  .preview-pane blockquote { border-left:3px solid var(--accent); padding-left:12px; color:#999; }
-  .preview-pane table { border-collapse:collapse; width:100%; }
-  .preview-pane th,.preview-pane td { border:1px solid var(--border); padding:6px 10px; text-align:left; font-size:0.8rem; }
+  .field label {
+    display:block; font-size:0.76rem;
+    color:var(--dim); margin-bottom:4px;
+    font-weight:600; letter-spacing:0.5px;
+  }
+  .preview-pane {
+    background:rgba(0,0,0,0.2);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:20px; min-height:200px;
+    font-size:0.85rem; line-height:1.75;
+    overflow-y:auto; max-height:600px;
+  }
+  .preview-pane h1,.preview-pane h2,.preview-pane h3 { color:#fff; margin:1em 0 0.5em; }
+  .preview-pane h1 { font-size:1.4rem; }
+  .preview-pane h2 { font-size:1.15rem; border-left:3px solid var(--accent); padding-left:12px; }
+  .preview-pane p { color:#ccc; margin:0.5em 0; }
+  .preview-pane code {
+    background:rgba(91,156,245,0.15);
+    color:var(--accent-glow); padding:2px 6px;
+    border-radius:3px; font-size:0.9em;
+  }
+  .preview-pane pre {
+    background:rgba(0,0,0,0.4); padding:14px;
+    border-radius:var(--radius-sm); overflow-x:auto;
+    border:1px solid var(--border);
+  }
+  .preview-pane pre code { background:none; padding:0; }
+  .preview-pane blockquote {
+    border-left:3px solid var(--accent);
+    padding-left:14px; color:#999;
+    margin:0.8em 0;
+  }
+  .preview-pane table { border-collapse:collapse; width:100%; margin:0.8em 0; }
+  .preview-pane th,.preview-pane td {
+    border:1px solid var(--border);
+    padding:6px 10px; text-align:left; font-size:0.8rem;
+  }
+  .preview-pane th { background:rgba(91,156,245,0.08); }
+  .preview-pane img { max-width:100%; border-radius:var(--radius-sm); }
+  .preview-pane ul,.preview-pane ol { padding-left:1.5em; margin:0.5em 0; }
 
   /* 日志 */
-  .log-area { background:rgba(0,0,0,0.4); border:1px solid var(--border); border-radius:var(--radius); padding:16px; font-family:monospace; font-size:0.78rem; color:var(--dim); max-height:300px; overflow-y:auto; white-space:pre-wrap; line-height:1.5; }
+  .log-area {
+    background:rgba(0,0,0,0.4);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:16px;
+    font-family:"JetBrains Mono","Fira Code",Consolas,monospace;
+    font-size:0.75rem; color:var(--dim);
+    max-height:300px; overflow-y:auto;
+    white-space:pre-wrap; line-height:1.5;
+  }
 
   /* Toast */
-  .toast { position:fixed; top:20px; right:20px; padding:10px 20px; border-radius:var(--radius); font-size:0.82rem; font-weight:600; z-index:9999; animation:slideIn 0.3s ease; }
-  .toast.success { background:rgba(52,211,153,0.15); border:1px solid rgba(52,211,153,0.3); color:var(--green); }
-  .toast.error { background:rgba(248,113,113,0.15); border:1px solid rgba(248,113,113,0.3); color:var(--red); }
+  .toast {
+    position:fixed; top:20px; right:20px;
+    padding:10px 20px; border-radius:var(--radius-sm);
+    font-size:0.82rem; font-weight:600;
+    z-index:9999;
+    animation:slideIn 0.35s var(--ease-out);
+  }
+  .toast.success {
+    background:rgba(52,211,153,0.12);
+    border:1px solid rgba(52,211,153,0.25);
+    color:var(--green);
+  }
+  .toast.error {
+    background:rgba(248,113,113,0.12);
+    border:1px solid rgba(248,113,113,0.25);
+    color:var(--red);
+  }
   @keyframes slideIn { from { transform:translateX(100px); opacity:0; } to { transform:translateX(0); opacity:1; } }
 
   /* 上传区 */
-  .drop-zone { border:2px dashed var(--border); border-radius:var(--radius); padding:40px; text-align:center; cursor:pointer; transition:all 0.3s; }
-  .drop-zone:hover,.drop-zone.dragover { border-color:var(--accent); background:rgba(110,168,254,0.04); }
+  .drop-zone {
+    border:2px dashed var(--border);
+    border-radius:var(--radius);
+    padding:40px; text-align:center;
+    cursor:pointer;
+    transition:all 0.3s var(--ease-out);
+  }
+  .drop-zone:hover,.drop-zone.dragover {
+    border-color:var(--accent);
+    background:rgba(91,156,245,0.04);
+  }
   .drop-zone p { color:var(--dim); font-size:0.85rem; }
 
-  /* CDN 复制 */
-  .cdn-bar { display:flex; gap:8px; align-items:center; }
-  .cdn-bar input { font-family:monospace; font-size:0.72rem; }
+  /* 登录页面 */
+  .login-wrapper {
+    display:flex; align-items:center; justify-content:center;
+    height:100vh; background:var(--bg);
+  }
+  .login-wrapper::before {
+    content:'';
+    position:fixed; inset:0;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(40,80,160,0.08) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 70%, rgba(64,200,224,0.04) 0%, transparent 50%);
+    pointer-events:none;
+  }
+  .login-card {
+    position:relative;
+    background:var(--panel);
+    backdrop-filter:blur(24px) saturate(180%);
+    -webkit-backdrop-filter:blur(24px) saturate(180%);
+    border:1px solid var(--border);
+    border-radius:8px; padding:48px 40px;
+    width:380px; text-align:center;
+    box-shadow:0 16px 48px rgba(0,0,0,0.4);
+  }
+  .login-card .login-logo {
+    font-size:2rem; font-weight:900;
+    letter-spacing:4px; color:#fff;
+    margin-bottom:6px;
+  }
+  .login-card .login-subtitle {
+    color:var(--dim); font-size:0.82rem;
+    margin-bottom:28px; letter-spacing:1px;
+  }
+  .login-card .hint {
+    color:var(--dim); font-size:0.68rem;
+    margin-top:8px; margin-bottom:12px;
+  }
+  .login-card .setup-hint {
+    color:var(--red); font-size:0.7rem;
+    background:rgba(248,113,113,0.06);
+    padding:8px 12px; border-radius:4px;
+    text-align:left; line-height:1.6; margin-bottom:12px;
+    border:1px solid rgba(248,113,113,0.1);
+  }
+  .login-card .setup-hint code {
+    background:rgba(0,0,0,0.4); padding:2px 6px;
+    border-radius:3px; font-size:0.7rem;
+    color:#fbbf24; word-break:break-all;
+    display:block; margin-top:4px;
+  }
 
   /* 响应式 */
   @media (max-width:900px) {
-    .sidebar { width:60px; }
+    .sidebar { width:56px; }
     .sidebar .logo { font-size:0; padding:20px 0; text-align:center; }
-    .nav-item span:not(.icon) { display:none; }
+    .sidebar .logo span { display:none; }
+    .nav-item span:not(i) { display:none; }
+    .nav-item i { margin:0 auto; }
     .editor-layout { flex-direction:column; }
     .editor-right { width:100%; }
   }
@@ -123,12 +403,12 @@
 <aside class="sidebar">
   <div class="logo">JINGYU<span>Admin Panel</span></div>
   <nav>
-    <div class="nav-item active" data-tab="posts"><span class="icon">📝</span><span>文章管理</span></div>
-    <div class="nav-item" data-tab="images"><span class="icon">🖼️</span><span>图床管理</span></div>
-    <div class="nav-item" data-tab="config"><span class="icon">⚙️</span><span>站点配置</span></div>
-    <div class="nav-item" data-tab="deploy"><span class="icon">🚀</span><span>部署发布</span></div>
+    <div class="nav-item active" data-tab="posts"><i class="fa-solid fa-pen-to-square"></i><span>文章管理</span></div>
+    <div class="nav-item" data-tab="images"><i class="fa-solid fa-images"></i><span>图床管理</span></div>
+    <div class="nav-item" data-tab="config"><i class="fa-solid fa-gear"></i><span>站点配置</span></div>
+    <div class="nav-item" data-tab="deploy"><i class="fa-solid fa-rocket"></i><span>部署发布</span></div>
   </nav>
-  <div class="footer">v1.0 · Local Admin</div>
+  <div class="footer">v1.1 · Local Admin</div>
 </aside>
 
 <!-- 主区 -->
@@ -153,17 +433,20 @@ function setToken(t) { sessionStorage.setItem(AUTH_KEY, t); }
 // 检查登录状态
 if (!getToken()) {
   document.body.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg);">
-      <div style="background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:48px 40px;width:380px;text-align:center;">
-        <div style="font-size:2rem;font-weight:900;letter-spacing:4px;color:#fff;margin-bottom:8px;">JINGYU</div>
-        <div style="color:var(--dim);font-size:0.85rem;margin-bottom:28px;">Admin Panel</div>
-        <input id="pwd-input" type="password" placeholder="请输入管理密码" style="text-align:center;font-size:0.95rem;padding:12px;margin-bottom:8px;" onkeydown="if(event.key==='Enter')doLogin()">
-        <p style="color:var(--dim);font-size:0.68rem;margin-bottom:12px;">💡 密码提示：l9</p>
-        <p style="color:var(--red);font-size:0.7rem;margin-bottom:8px;background:rgba(248,113,113,0.08);padding:8px 12px;border-radius:4px;text-align:left;line-height:1.6;">
-          ⚠️ 首次使用或换电脑？<br>在项目根目录打开 CMD，复制运行下面这行，然后输入密码：<br>
-          <code style="background:rgba(0,0,0,0.4);padding:4px 8px;border-radius:3px;display:block;margin-top:4px;font-size:0.72rem;color:#fbbf24;word-break:break-all;">cmd /v:on /c "set /p pw=Password: &amp;&amp; echo !pw! &gt; admin\.env"</code>
+    <div class="login-wrapper">
+      <div class="login-card">
+        <div class="login-logo">JINGYU</div>
+        <div class="login-subtitle">Admin Panel</div>
+        <input id="pwd-input" type="password" placeholder="请输入管理密码"
+          style="text-align:center;font-size:0.95rem;padding:12px;"
+          onkeydown="if(event.key==='Enter')doLogin()">
+        <p class="hint">💡 密码提示：l9</p>
+        <p class="setup-hint">
+          ⚠️ 首次使用或换电脑？<br>在项目根目录打开 CMD，复制运行：<br>
+          <code>cmd /v:on /c "set /p pw=Password: && echo !pw! > admin\\.env"</code>
         </p>
-        <button class="btn primary" style="width:100%;padding:12px;font-size:0.9rem;" onclick="doLogin()">🔑 进入管理后台</button>
+        <button class="btn primary" style="width:100%;padding:12px;font-size:0.9rem;"
+          onclick="doLogin()"><i class="fa-solid fa-key"></i> 进入管理后台</button>
         <p id="login-err" style="color:var(--red);font-size:0.78rem;margin-top:12px;display:none;"></p>
       </div>
     </div>
@@ -190,7 +473,7 @@ if (!getToken()) {
       errEl.style.display = 'block';
     }
   };
-  throw new Error('Not logged in'); // 阻止后续代码执行
+  throw new Error('Not logged in');
 }
 
 // ── 全局状态 ──────────────────────────────
@@ -201,7 +484,6 @@ const state = {
   editing: false,
   deployLog: ''
 };
-
 
 // ── Toast ─────────────────────────────────
 function toast(msg, type = 'success') {
@@ -243,7 +525,7 @@ async function renderPosts() {
   state.posts = await api.get('/api/posts');
   const el = document.getElementById('content');
   const actions = document.getElementById('toolbar-actions');
-  actions.innerHTML = '<button class="btn primary" onclick="newPost()">+ 新建文章</button>';
+  actions.innerHTML = '<button class="btn primary" onclick="newPost()"><i class="fa-solid fa-plus"></i> 新建文章</button>';
 
   if (state.posts.length === 0) {
     el.innerHTML = '<div class="card" style="text-align:center;color:var(--dim);padding:60px;">还没有文章，点击右上角「新建文章」开始</div>';
@@ -252,14 +534,14 @@ async function renderPosts() {
 
   el.innerHTML = '<div class="post-list">' + state.posts.map(p => `
     <div class="post-item" onclick="editPost('${p.filename}')">
-      ${p.cover ? `<img src="${p.cover}" style="width:60px;height:38px;object-fit:cover;border-radius:3px;flex-shrink:0;">` : ''}
+      ${p.cover ? `<img src="${p.cover}" style="width:60px;height:38px;object-fit:cover;border-radius:3px;flex-shrink:0;" onerror="this.style.display='none'">` : ''}
       <div class="post-info">
         <div class="post-title">${p.title}</div>
         <div class="post-meta">${p.date?.slice(0,10) || ''} · ${p.categories || '未分类'} · ${(p.tags||[]).join(', ')}</div>
       </div>
       <div class="post-actions">
-        <button class="btn sm" onclick="event.stopPropagation();editPost('${p.filename}')">编辑</button>
-        <button class="btn sm danger" onclick="event.stopPropagation();deletePost('${p.filename}')">删除</button>
+        <button class="btn sm" onclick="event.stopPropagation();editPost('${p.filename}')"><i class="fa-solid fa-pen"></i> 编辑</button>
+        <button class="btn sm danger" onclick="event.stopPropagation();deletePost('${p.filename}')"><i class="fa-solid fa-trash"></i> 删除</button>
       </div>
     </div>
   `).join('') + '</div>';
@@ -291,8 +573,8 @@ function showEditor() {
   const el = document.getElementById('content');
   const actions = document.getElementById('toolbar-actions');
   actions.innerHTML = `
-    <button class="btn" onclick="renderPosts()">← 返回</button>
-    <button class="btn primary" onclick="savePost()">💾 保存</button>
+    <button class="btn" onclick="renderPosts()"><i class="fa-solid fa-arrow-left"></i> 返回</button>
+    <button class="btn primary" onclick="savePost()"><i class="fa-solid fa-floppy-disk"></i> 保存</button>
   `;
 
   el.innerHTML = `
@@ -317,7 +599,7 @@ function showEditor() {
           </div>
           <div class="field">
             <label>封面图路径（可选）</label>
-            <input id="edit-cover" value="${esc(p.cover)}" placeholder="/images/cover-xxx.svg">
+            <input id="edit-cover" value="${esc(p.cover)}" placeholder="/images/covers/cover-xxx.jpg">
           </div>
           <div class="field">
             <label>正文（Markdown）</label>
@@ -327,41 +609,21 @@ function showEditor() {
       </div>
       <div class="editor-right">
         <div class="card">
-          <div class="card-header">📄 预览</div>
-          <div class="preview-pane" id="preview">${parseMD(p.content)}</div>
+          <div class="card-header"><i class="fa-solid fa-eye"></i> 预览</div>
+          <div class="preview-pane" id="preview">${marked.parse(p.content || '')}</div>
         </div>
       </div>
     </div>
   `;
 }
 
-function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
 function updatePreview() {
   const md = document.getElementById('edit-content')?.value || '';
-  document.getElementById('preview').innerHTML = parseMD(md);
-}
-
-function parseMD(md) {
-  // 简易 Markdown → HTML
-  let html = (md||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  html = html.replace(/^### (.+)/gm, '<h3>$1</h3>');
-  html = html.replace(/^## (.+)/gm, '<h2>$1</h2>');
-  html = html.replace(/^# (.+)/gm, '<h1>$1</h1>');
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-  html = html.replace(/^> (.+)/gm, '<blockquote>$1</blockquote>');
-  html = html.replace(/^- (.+)/gm, '<li>$1</li>');
-  html = html.replace(/^\|(.+)\|/gm, (line) => {
-    const cells = line.split('|').filter(c => c.trim()).map(c => '<td>' + c.trim() + '</td>');
-    return cells.length ? '<tr>' + cells.join('') + '</tr>' : line;
-  });
-  html = html.replace(/(\n\n)/g, '</p><p>');
-  html = html.replace(/\n/g, '<br>');
-  html = '<p>' + html + '</p>';
-  html = html.replace(/<p><h/g, '<h').replace(/<\/h(\d)><\/p>/g, '</h$1>');
-  return html;
+  document.getElementById('preview').innerHTML = marked.parse(md);
 }
 
 async function savePost() {
@@ -390,28 +652,29 @@ async function renderImages() {
   state.images = await api.get('/api/images');
   const el = document.getElementById('content');
   const actions = document.getElementById('toolbar-actions');
-  actions.innerHTML = '<button class="btn green" onclick="deploySite()">🚀 部署后 CDN 生效</button>';
+  actions.innerHTML = '<button class="btn green" onclick="deploySite()"><i class="fa-solid fa-rocket"></i> 部署后 CDN 生效</button>';
 
   el.innerHTML = `
     <div class="card">
       <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-        <p>📁 拖拽图片到这里上传，或点击选择</p>
+        <p><i class="fa-solid fa-cloud-arrow-up" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>拖拽图片到这里上传，或点击选择</p>
         <p style="font-size:0.7rem;margin-top:4px;">支持 JPG/PNG/SVG/GIF · 单文件最大 20MB</p>
       </div>
       <input type="file" id="fileInput" multiple accept="image/*" style="display:none" onchange="uploadImages(this.files)">
     </div>
     ${state.images.length ? `
     <div class="card">
-      <div class="card-header">图库（${state.images.length} 张）</div>
+      <div class="card-header"><i class="fa-solid fa-folder-open"></i> 图库（${state.images.length} 张）</div>
       <div class="img-grid">
         ${state.images.map(img => `
           <div class="img-card">
-            <img class="preview" src="${img.path}" loading="lazy" onerror="this.src='data:image/svg+xml,${encodeURIComponent('<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22200%22><rect fill=%22%23111%22 width=%22320%22 height=%22200%22/></svg>')}'">
+            <img class="preview" src="${img.path}" loading="lazy" onerror="this.style.display='none'">
             <div class="info">
               <div class="name" title="${img.name}">${img.name}</div>
               <div class="size">${(img.size/1024).toFixed(1)} KB</div>
-              <div style="margin-top:4px;">
-                <input value="${img.cdn}" readonly style="font-size:0.62rem;padding:4px 6px;" onclick="this.select();document.execCommand('copy');toast('CDN 链接已复制')" title="点击复制 CDN 链接">
+              <div class="cdn-row">
+                <input value="${img.cdn}" readonly title="CDN 链接" onclick="this.select()">
+                <button class="copy-btn" onclick="copyCDN('${img.cdn.replace(/'/g, "\\'")}', this)">复制</button>
               </div>
             </div>
           </div>
@@ -434,6 +697,20 @@ async function renderImages() {
   }
 }
 
+function copyCDN(url, btn) {
+  navigator.clipboard.writeText(url).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ 已复制';
+    btn.style.color = 'var(--green)';
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.style.color = '';
+    }, 2000);
+  }).catch(() => {
+    toast('复制失败，请手动选择链接', 'error');
+  });
+}
+
 async function uploadImages(files) {
   if (!files.length) return;
   const form = new FormData();
@@ -453,11 +730,11 @@ async function renderConfig() {
   const cfg = await api.get('/api/config');
   const el = document.getElementById('content');
   const actions = document.getElementById('toolbar-actions');
-  actions.innerHTML = '<button class="btn primary" onclick="saveConfig()">💾 保存配置</button>';
+  actions.innerHTML = '<button class="btn primary" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> 保存配置</button>';
 
   el.innerHTML = `
     <div class="card">
-      <div class="card-header">站点设置</div>
+      <div class="card-header"><i class="fa-solid fa-globe"></i> 站点设置</div>
       <div class="field"><label>站点标题</label><input id="cfg-title" value="${esc(cfg.site.title)}"></div>
       <div class="field"><label>副标题</label><input id="cfg-subtitle" value="${esc(cfg.site.subtitle)}"></div>
       <div class="field"><label>描述</label><textarea rows="2" id="cfg-desc">${esc(cfg.site.description)}</textarea></div>
@@ -466,7 +743,7 @@ async function renderConfig() {
       <div class="field"><label>站点 URL</label><input id="cfg-url" value="${esc(cfg.site.url)}"></div>
     </div>
     <div class="card">
-      <div class="card-header">主题设置</div>
+      <div class="card-header"><i class="fa-solid fa-palette"></i> 主题设置</div>
       <div class="field"><label>默认显示模式</label><select id="cfg-display"><option ${cfg.theme.display_mode==='dark'?'selected':''}>dark</option><option ${cfg.theme.display_mode==='light'?'selected':''}>light</option></select></div>
     </div>
   `;
@@ -494,34 +771,48 @@ async function saveConfig() {
 function renderDeploy() {
   const el = document.getElementById('content');
   const actions = document.getElementById('toolbar-actions');
-  actions.innerHTML = '<button class="btn primary" onclick="generateSite()">🔧 生成静态文件</button><button class="btn green" onclick="deploySite()">🚀 部署到公网</button>';
+  actions.innerHTML = `
+    <button class="btn primary" onclick="generateSite()"><i class="fa-solid fa-hammer"></i> 生成静态文件</button>
+    <button class="btn green" onclick="deploySite()"><i class="fa-solid fa-rocket"></i> 部署到公网</button>
+  `;
 
   el.innerHTML = `
     <div class="card">
-      <div class="card-header">部署状态</div>
-      <p style="color:var(--dim);font-size:0.85rem;margin-bottom:12px;">博客地址：<a href="https://tintailouge.github.io/my-view-web/" target="_blank" style="color:var(--accent);">tintailouge.github.io/my-view-web</a></p>
-      <p style="color:var(--dim);font-size:0.85rem;">点击「生成静态文件」在本地生成站点，点击「部署到公网」推送到 GitHub Pages。部署后等待 1-2 分钟生效。</p>
+      <div class="card-header"><i class="fa-solid fa-info-circle"></i> 部署状态</div>
+      <p style="color:var(--dim);font-size:0.85rem;margin-bottom:12px;">
+        博客地址：<a href="https://tintailouge.github.io/my-view-web/" target="_blank" style="color:var(--accent);">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i> tintailouge.github.io/my-view-web</a>
+      </p>
+      <p style="color:var(--dim);font-size:0.85rem;">
+        点击「生成静态文件」在本地生成站点，点击「部署到公网」推送到 GitHub Pages。部署后等待 1-2 分钟生效。
+      </p>
     </div>
     <div class="card">
-      <div class="card-header">操作日志</div>
+      <div class="card-header"><i class="fa-solid fa-terminal"></i> 操作日志</div>
       <div class="log-area" id="deploy-log">${state.deployLog || '等待操作...'}</div>
     </div>
   `;
 }
 
 async function generateSite() {
-  document.getElementById('deploy-log').textContent = '正在生成...';
+  const logEl = document.getElementById('deploy-log');
+  const start = Date.now();
+  logEl.textContent = '⏳ 正在生成...';
   await api.post('/api/hexo/generate');
-  document.getElementById('deploy-log').textContent = '✅ 静态文件已生成到 public/ 目录';
+  const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+  logEl.textContent = '✅ 静态文件已生成到 public/ 目录（耗时 ' + elapsed + 's）';
   toast('生成完成');
 }
 
 async function deploySite() {
   const logEl = document.getElementById('deploy-log');
-  logEl.textContent = '🔄 清理旧文件 → 生成 → 部署中...\n';
+  const start = Date.now();
+  logEl.textContent = '🔄 清理旧文件 → 生成 → 部署中...\n⏱ 开始计时...\n';
   const res = await api.post('/api/hexo/deploy');
+  const elapsed = ((Date.now() - start) / 1000).toFixed(1);
   state.deployLog = res.log || '';
-  logEl.textContent = state.deployLog + '\n\n' + (res.success ? '✅ 部署成功！1-2 分钟后刷新查看。' : '❌ 部署失败，请查看日志。');
+  logEl.textContent = state.deployLog + '\n\n⏱ 总耗时：' + elapsed + 's\n' +
+    (res.success ? '✅ 部署成功！1-2 分钟后刷新查看。' : '❌ 部署失败，请查看日志。');
   toast(res.message, res.success ? 'success' : 'error');
 }
 
