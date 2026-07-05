@@ -1,339 +1,566 @@
 /* ============================================
-   游戏卡片风格 — 明日方舟 UI 美学
-   Game Card Aesthetic for Hexo Blog
+   游戏 UI 风格 — 二次元向游戏策划博客
+   暗色默认 · 发光卡片 · 网格背景
    ============================================ */
 
-/* ---------- CSS 变量：统一调色板 ---------- */
+/* ---------- CSS 变量 ---------- */
 :root {
-  --game-bg: #fffef8;
-  --game-card-bg: #ffffff;
-  --game-accent: #0224ff;
-  --game-accent-dark: #1f1f8a;
-  --game-text: #5b5b5b;
-  --game-text-light: #9d9d9d;
-  --game-shadow: rgba(0, 0, 20, 0.18);
-  --game-radius: 2px;
-  --card-transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --game-bg: #0a0e17;
+  --game-bg-light: #fffef8;
+  --game-card: rgba(18, 24, 38, 0.85);
+  --game-card-light: #ffffff;
+  --game-accent: #4a9eff;
+  --game-accent-glow: #00d4ff;
+  --game-text: #c8cdd6;
+  --game-text-dim: #6b7280;
+  --game-text-light: #5b5b5b;
+  --game-border: rgba(74, 158, 255, 0.15);
+  --game-border-hover: rgba(74, 158, 255, 0.45);
+  --game-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --game-glow: 0 0 20px rgba(74, 158, 255, 0.3);
+  --radius: 3px;
 }
 
-/* ---------- 全局背景 ---------- */
+/* ---------- 全局 ---------- */
 body {
-  background: var(--game-bg) !important;
+  font-family: -apple-system, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  letter-spacing: 0.3px;
 }
 
 #body-wrap {
-  background: var(--game-bg);
+  background: transparent;
 }
 
-/* ---------- 导航栏游戏化 ---------- */
+/* ---------- web_bg: 网格背景 ---------- */
+#web_bg {
+  background-color: var(--game-bg) !important;
+  background-image:
+    /* 大网格 */
+    linear-gradient(rgba(74, 158, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74, 158, 255, 0.04) 1px, transparent 1px),
+    /* 小网格 */
+    linear-gradient(rgba(74, 158, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74, 158, 255, 0.02) 1px, transparent 1px);
+  background-size: 48px 48px, 48px 48px, 12px 12px, 12px 12px;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+  opacity: 1 !important;
+}
+
+/* ---------- 导航栏: 玻璃效果 ---------- */
 #nav {
-  background: rgba(255, 254, 248, 0.92) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 1px 0 rgba(2, 36, 255, 0.08);
+  background: rgba(10, 14, 23, 0.85) !important;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--game-border) !important;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
 }
 
 #nav .site-page,
 #nav #site-name {
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  transition: color 0.3s ease;
-}
-
-#nav .site-page:hover {
-  color: var(--game-accent) !important;
-}
-
-/* ---------- 首页文章卡片 — 3D 透视容器 ---------- */
-.recent-post-item {
-  background: var(--game-card-bg) !important;
-  border-radius: var(--game-radius) !important;
-  box-shadow: 0 4px 12px var(--game-shadow) !important;
-  transition: transform var(--card-transition),
-              box-shadow 0.4s ease,
-              z-index 0.4s ease !important;
-  transform: scale(1);
-  z-index: 0;
-  position: relative;
-  overflow: visible !important;
-  /* 为视差效果留空间 */
-  cursor: pointer;
-}
-
-/* 卡片悬停：放大 + 加深阴影 */
-.recent-post-item:hover {
-  transform: scale(1.03) !important;
-  z-index: 10 !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 20, 0.25) !important;
-}
-
-/* ---------- 卡片封面图 ---------- */
-.recent-post-item .post_cover {
-  overflow: hidden;
-  transition: filter 0.3s ease;
-}
-
-.recent-post-item:hover .post_cover img {
-  filter: brightness(1.05);
-  transition: filter 0.3s ease;
-}
-
-/* ---------- 卡片标题 — 匹配游戏卡片 title 样式 ---------- */
-.recent-post-item .article-title,
-.recent-post-item h2 a {
   color: var(--game-text) !important;
-  font-weight: bold !important;
-  font-size: 1.15rem !important;
-  letter-spacing: 0.3px;
-  transition: color 0.3s ease;
+  font-weight: 500;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  transition: color 0.3s, text-shadow 0.3s;
 }
 
-.recent-post-item:hover .article-title,
-.recent-post-item:hover h2 a {
+#nav .site-page:hover,
+#nav #site-name:hover {
   color: var(--game-accent) !important;
+  text-shadow: 0 0 12px rgba(74, 158, 255, 0.5);
 }
 
-/* ---------- 分类标签 — 仿游戏 badge 样式 ---------- */
-.article-meta__categories a,
-.article-meta-categories a,
-.recent-post-item .article-meta .categories a {
-  background: var(--game-accent) !important;
+/* 导航栏 site-name */
+#nav #site-name {
+  font-size: 1.1rem;
+  font-weight: 700;
   color: #fff !important;
-  font-size: 11px !important;
-  padding: 2px 10px !important;
-  border-radius: 0 !important;
+}
+
+/* ---------- header 顶部区域 ---------- */
+#page-header.full_page {
+  min-height: 280px !important;
+  background: linear-gradient(180deg,
+    rgba(10, 14, 23, 0.3) 0%,
+    rgba(10, 14, 23, 0.9) 100%);
+}
+
+#page-header #site-info {
+  text-align: center;
+}
+
+#site-title {
+  font-size: 2.4rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 3px;
+  color: #fff !important;
+  text-shadow: 0 0 40px rgba(74, 158, 255, 0.4);
+  margin-bottom: 8px;
+}
+
+#site-subtitle {
+  color: var(--game-text-dim) !important;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+}
+
+/* 社交图标 */
+#site_social_icons .social-icon {
+  color: var(--game-text-dim) !important;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+#site_social_icons .social-icon:hover {
+  color: var(--game-accent-glow) !important;
+  text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
+}
+
+/* ---------- 首页文章卡片 ---------- */
+.recent-post-item {
+  background: var(--game-card) !important;
+  border: 1px solid var(--game-border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--game-shadow) !important;
+  transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   position: relative;
+  overflow: hidden !important;
+  cursor: pointer;
+  margin-bottom: 24px !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* 卡片左侧装饰线 */
+.recent-post-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--game-accent), var(--game-accent-glow));
+  opacity: 0.5;
+  transition: opacity 0.3s, width 0.3s;
+  z-index: 1;
+}
+
+.recent-post-item:hover::before {
+  opacity: 1;
+  width: 4px;
+}
+
+.recent-post-item:hover {
+  border-color: var(--game-border-hover) !important;
+  box-shadow: var(--game-shadow), var(--game-glow) !important;
+  transform: translateY(-3px) !important;
+}
+
+/* 卡片标题 */
+.recent-post-item .article-title {
+  color: #e5e7eb !important;
+  font-weight: 700 !important;
+  font-size: 1.2rem !important;
   letter-spacing: 0.5px;
+  transition: color 0.3s;
+}
+
+.recent-post-item:hover .article-title {
+  color: var(--game-accent-glow) !important;
+}
+
+/* 卡片摘要 */
+.recent-post-item .content {
+  color: var(--game-text-dim) !important;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin-top: 8px;
+  opacity: 0.85;
+}
+
+/* ---------- 分类标签: 游戏 badge 风格 ---------- */
+.article-meta__categories a,
+.article-meta-categories a {
+  background: rgba(74, 158, 255, 0.15) !important;
+  color: var(--game-accent) !important;
+  font-size: 11px !important;
+  padding: 3px 12px !important;
+  border: 1px solid rgba(74, 158, 255, 0.25) !important;
+  border-radius: 2px !important;
   font-weight: 600;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  transition: all 0.3s ease;
-  /* badgeb shadow 角的模拟 */
-  box-shadow: 3px 3px 0 -1px var(--game-accent-dark),
-              -1px -1px 0 0 var(--game-accent-dark);
+  transition: all 0.3s;
 }
 
-.article-meta__categories a:hover,
-.article-meta-categories a:hover {
-  background: var(--game-accent-dark) !important;
-  box-shadow: 3px 3px 0 -1px var(--game-accent),
-              -1px -1px 0 0 var(--game-accent);
+.article-meta__categories a:hover {
+  background: rgba(74, 158, 255, 0.28) !important;
+  border-color: var(--game-accent) !important;
+  color: var(--game-accent-glow) !important;
+  box-shadow: 0 0 12px rgba(74, 158, 255, 0.2);
 }
 
-/* ---------- 标签样式 ---------- */
+/* 标签 */
 .article-meta__tags a,
 .article-meta-tags a {
-  color: var(--game-text-light) !important;
-  border-bottom: 1px solid transparent !important;
+  color: var(--game-text-dim) !important;
   font-size: 0.78rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s;
+  border-bottom: 1px solid transparent !important;
 }
 
 .article-meta__tags a:hover {
   color: var(--game-accent) !important;
-  border-bottom-color: var(--game-accent) !important;
+  border-bottom-color: rgba(74, 158, 255, 0.3) !important;
+}
+
+/* 日期 */
+.post-meta-date,
+.article-meta-label {
+  color: var(--game-text-dim) !important;
+  font-size: 0.8rem;
 }
 
 /* ---------- 侧边栏卡片 ---------- */
 #aside-content .card-widget {
-  background: var(--game-card-bg) !important;
-  border-radius: var(--game-radius) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 20, 0.08) !important;
-  transition: box-shadow 0.3s ease;
+  background: var(--game-card) !important;
+  border: 1px solid var(--game-border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--game-shadow) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 #aside-content .card-widget:hover {
-  box-shadow: 0 4px 16px var(--game-shadow) !important;
+  border-color: var(--game-border-hover) !important;
 }
 
-/* 侧边栏作者卡片按钮 */
-#aside-content .card-info #card-info-btn {
-  background: var(--game-accent) !important;
-  color: #fff !important;
-  border-radius: 0 !important;
-  font-weight: 600;
+/* 侧边栏标题 */
+#aside-content .item-headline {
+  color: #e5e7eb !important;
+  font-weight: 700;
   letter-spacing: 0.5px;
-  transition: all 0.3s ease;
+  font-size: 1rem;
 }
 
-#aside-content .card-info #card-info-btn:hover {
-  background: var(--game-accent-dark) !important;
-}
-
-/* ---------- 文章页内容样式 ---------- */
-#post {
-  background: var(--game-card-bg) !important;
-  border-radius: var(--game-radius) !important;
-  box-shadow: 0 4px 12px var(--game-shadow) !important;
-  padding: 2rem 2.5rem;
-}
-
-/* 文章页标题 */
-#article-container h1,
-.post-title {
+/* 侧边栏链接 */
+#aside-content a {
   color: var(--game-text) !important;
-  font-weight: bold !important;
+  transition: color 0.3s;
 }
 
-/* 文章链接 */
+#aside-content a:hover {
+  color: var(--game-accent) !important;
+}
+
+/* 作者卡片 */
+.card-info .author-info-name {
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.card-info .author-info-description {
+  color: var(--game-text-dim) !important;
+}
+
+#card-info-btn {
+  background: rgba(74, 158, 255, 0.15) !important;
+  color: var(--game-accent) !important;
+  border: 1px solid rgba(74, 158, 255, 0.25) !important;
+  border-radius: 2px !important;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  transition: all 0.3s;
+}
+
+#card-info-btn:hover {
+  background: rgba(74, 158, 255, 0.25) !important;
+  border-color: var(--game-accent) !important;
+  box-shadow: 0 0 16px rgba(74, 158, 255, 0.2);
+}
+
+/* 公告卡片 */
+.card-announcement .announcement_content {
+  color: var(--game-text) !important;
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+/* 网站信息 */
+.webinfo .item-name {
+  color: var(--game-text-dim) !important;
+}
+.webinfo .item-count {
+  color: var(--game-accent) !important;
+}
+
+/* ---------- 文章页 ---------- */
+#post {
+  background: var(--game-card) !important;
+  border: 1px solid var(--game-border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--game-shadow) !important;
+  padding: 2.5rem 3rem;
+}
+
+#article-container h1,
+#article-container h2,
+#article-container h3 {
+  color: #e5e7eb !important;
+  font-weight: 700;
+}
+
+#article-container h2 {
+  border-left: 4px solid var(--game-accent);
+  padding-left: 16px;
+  margin: 2em 0 1em;
+}
+
+#article-container p {
+  color: var(--game-text) !important;
+  line-height: 1.9;
+}
+
 #article-container a {
   color: var(--game-accent) !important;
-  font-weight: 500;
-  transition: all 0.3s ease;
   text-decoration: underline;
-  text-decoration-color: rgba(2, 36, 255, 0.25);
+  text-decoration-color: rgba(74, 158, 255, 0.3);
   text-underline-offset: 3px;
 }
 
 #article-container a:hover {
-  text-decoration-color: var(--game-accent);
+  text-decoration-color: var(--game-accent-glow);
 }
 
-/* ---------- 分页按钮 ---------- */
+#article-container blockquote {
+  border-left: 3px solid var(--game-accent) !important;
+  background: rgba(74, 158, 255, 0.05) !important;
+  color: var(--game-text) !important;
+}
+
+#article-container code {
+  background: rgba(74, 158, 255, 0.1) !important;
+  color: var(--game-accent-glow) !important;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+#article-container figure.highlight {
+  border: 1px solid var(--game-border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--game-shadow);
+}
+
+/* ---------- 分页 ---------- */
+#pagination .page-number {
+  color: var(--game-text-dim) !important;
+  background: transparent !important;
+  transition: all 0.3s;
+}
+
 #pagination .page-number.current {
-  background: var(--game-accent) !important;
-  color: #fff !important;
-  border-radius: 0 !important;
+  background: rgba(74, 158, 255, 0.2) !important;
+  color: var(--game-accent) !important;
+  border: 1px solid var(--game-border-hover) !important;
+  border-radius: 2px !important;
 }
 
-#pagination a:hover {
+#pagination .page-number:hover {
   color: var(--game-accent) !important;
 }
 
 /* ---------- 页脚 ---------- */
 #footer {
+  color: var(--game-text-dim) !important;
   background: transparent !important;
-  color: var(--game-text-light) !important;
 }
-
 #footer a {
   color: var(--game-accent) !important;
 }
 
-/* ---------- dot pattern 装饰：页面背景 ---------- */
-#web_bg {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -2;
-  background-color: var(--game-bg);
-  /* 大尺寸圆点纹理 */
-  background-image:
-    radial-gradient(rgba(2, 36, 255, 0.04) 1px, transparent 1px),
-    radial-gradient(rgba(2, 36, 255, 0.03) 2px, transparent 2px);
-  background-size: 40px 40px, 80px 80px;
-  background-position: 0 0, 20px 20px;
-  opacity: 0.6;
-}
-
-/* ---------- dot pattern 装饰：卡片底部 ---------- */
-.recent-post-item::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  right: 0;
-  width: 100%;
-  height: 4px;
-  background-image:
-    radial-gradient(rgba(2, 36, 255, 0.12) 1px, transparent 1px);
-  background-size: 8px 8px;
-  background-position: 0 0;
-  background-repeat: repeat-x;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.recent-post-item:hover::after {
-  opacity: 1;
-}
-
-/* ---------- 滚动条 ---------- */
-::-webkit-scrollbar-thumb {
-  background: rgba(2, 36, 255, 0.2) !important;
-  border-radius: 0 !important;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(2, 36, 255, 0.4) !important;
-}
-
-/* ---------- 选择文本高亮 ---------- */
-::selection {
-  background: rgba(2, 36, 255, 0.15) !important;
-  color: var(--game-accent) !important;
-}
-
-/* ---------- 顶部横幅遮罩 ---------- */
-#page-header #site-info {
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-/* ---------- 代码块 ---------- */
-#article-container figure.highlight {
-  border-radius: 0 !important;
-  box-shadow: 0 2px 8px var(--game-shadow);
-}
-
-/* ---------- blockquote ---------- */
-#article-container blockquote {
-  border-left: 3px solid var(--game-accent) !important;
-  background: rgba(2, 36, 255, 0.03) !important;
-  border-radius: 0 var(--game-radius) var(--game-radius) 0;
-}
-
-/* ---------- 相关文章卡片 ---------- */
+/* ---------- 相关文章 ---------- */
 .relatedPosts > .relatedPosts-list > div {
-  background: var(--game-card-bg) !important;
-  border-radius: var(--game-radius) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 20, 0.06) !important;
-  transition: transform var(--card-transition), box-shadow 0.3s ease;
+  background: var(--game-card) !important;
+  border: 1px solid var(--game-border) !important;
+  border-radius: var(--radius) !important;
+  transition: all 0.3s;
 }
 
 .relatedPosts > .relatedPosts-list > div:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px var(--game-shadow) !important;
+  border-color: var(--game-border-hover) !important;
+  box-shadow: var(--game-glow) !important;
+  transform: translateY(-2px);
 }
 
-/* ---------- 归档/分类/标签页卡片 ---------- */
-.category-lists .category-list-count,
-.tag-cloud-tags a {
-  transition: all 0.3s ease;
+/* ---------- 滚动条 ---------- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--game-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(74, 158, 255, 0.25);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 158, 255, 0.45);
 }
 
+/* ---------- 选中 ---------- */
+::selection {
+  background: rgba(74, 158, 255, 0.25) !important;
+  color: var(--game-accent-glow) !important;
+}
+
+/* ---------- 标签云 ---------- */
 .tag-cloud-tags a:hover {
-  background: var(--game-accent) !important;
+  background: rgba(74, 158, 255, 0.2) !important;
+  color: var(--game-accent-glow) !important;
+}
+
+/* ---------- 右下角按钮 ---------- */
+#rightside button {
+  color: var(--game-text-dim) !important;
+}
+#rightside button:hover {
+  color: var(--game-accent) !important;
+}
+
+/* ============================================
+   亮色模式覆盖
+   ============================================ */
+[data-theme="light"] #web_bg {
+  background-color: var(--game-bg-light) !important;
+  background-image:
+    linear-gradient(rgba(2, 36, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(2, 36, 255, 0.03) 1px, transparent 1px),
+    /* dot pattern */
+    radial-gradient(rgba(2, 36, 255, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px, 20px 20px;
+}
+
+[data-theme="light"] #nav {
+  background: rgba(255, 254, 248, 0.9) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] #nav .site-page,
+[data-theme="light"] #nav #site-name {
+  color: #333 !important;
+}
+
+[data-theme="light"] #nav #site-name {
+  color: #111 !important;
+}
+
+[data-theme="light"] #nav .site-page:hover {
+  color: #0224ff !important;
+  text-shadow: none;
+}
+
+[data-theme="light"] #page-header.full_page {
+  background: linear-gradient(180deg,
+    rgba(255, 254, 248, 0.5) 0%,
+    rgba(255, 254, 248, 1) 100%);
+}
+
+[data-theme="light"] #site-title {
+  color: #222 !important;
+  text-shadow: none;
+}
+
+[data-theme="light"] .recent-post-item {
+  background: #fff !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .recent-post-item .article-title {
+  color: #333 !important;
+}
+
+[data-theme="light"] .recent-post-item:hover .article-title {
+  color: #0224ff !important;
+}
+
+[data-theme="light"] .recent-post-item .content {
+  color: #888 !important;
+}
+
+[data-theme="light"] .recent-post-item::before {
+  background: linear-gradient(180deg, #0224ff, #1f1f8a);
+}
+
+[data-theme="light"] .recent-post-item:hover {
+  border-color: rgba(2, 36, 255, 0.25) !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 20, 0.12) !important;
+}
+
+[data-theme="light"] #aside-content .card-widget {
+  background: #fff !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .card-info .author-info-name { color: #222 !important; }
+[data-theme="light"] .card-info .author-info-description { color: #888 !important; }
+[data-theme="light"] #aside-content .item-headline { color: #333 !important; }
+[data-theme="light"] #aside-content a { color: #555 !important; }
+[data-theme="light"] .card-announcement .announcement_content { color: #666 !important; }
+
+[data-theme="light"] #post {
+  background: #fff !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] #article-container p { color: #444 !important; }
+[data-theme="light"] #article-container h2 { color: #222 !important; }
+[data-theme="light"] #article-container h3 { color: #333 !important; }
+[data-theme="light"] #article-container blockquote {
+  background: rgba(2, 36, 255, 0.03) !important;
+  color: #555 !important;
+}
+
+[data-theme="light"] .article-meta__categories a {
+  background: #0224ff !important;
   color: #fff !important;
+  border-color: #0224ff !important;
+}
+
+[data-theme="light"] .article-meta__categories a:hover {
+  background: #1f1f8a !important;
+}
+
+[data-theme="light"] #card-info-btn {
+  background: #0224ff !important;
+  color: #fff !important;
+  border-color: #0224ff !important;
+}
+
+[data-theme="light"] #card-info-btn:hover {
+  background: #1f1f8a !important;
+}
+
+[data-theme="light"] #article-container h2 {
+  border-left-color: #0224ff;
+}
+
+[data-theme="light"] #article-container a {
+  color: #0224ff !important;
 }
 
 /* ---------- 响应式 ---------- */
 @media screen and (max-width: 768px) {
-  .recent-post-item:hover {
-    transform: scale(1.01) !important;
+  #site-title {
+    font-size: 1.6rem !important;
   }
-
   #post {
     padding: 1.2rem 1rem;
   }
-}
-
-/* ---------- 暗色模式覆盖 ---------- */
-[data-theme="dark"] #web_bg {
-  background-color: #0d0d0d;
-  background-image:
-    radial-gradient(rgba(2, 36, 255, 0.06) 1px, transparent 1px),
-    radial-gradient(rgba(2, 36, 255, 0.04) 2px, transparent 2px);
-}
-
-[data-theme="dark"] #nav {
-  background: rgba(13, 13, 13, 0.92) !important;
-  box-shadow: 0 1px 0 rgba(2, 36, 255, 0.12);
-}
-
-[data-theme="dark"] .recent-post-item,
-[data-theme="dark"] #aside-content .card-widget,
-[data-theme="dark"] #post {
-  background: #1a1a1a !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  .recent-post-item:hover {
+    transform: translateY(-1px) !important;
+  }
 }
