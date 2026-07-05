@@ -101,6 +101,6 @@ theme: butterfly
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: git
-  repo: https://github.com/TintaiLouge/my-view-web.git
-  branch: gh-pages
+  - type: git
+    repo: https://github.com/TintaiLouge/my-view-web.git
+    branch: gh-pages
