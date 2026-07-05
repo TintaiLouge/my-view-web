@@ -36,7 +36,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* 背景：由 _config.butterfly.yml 的 background 字段控制 */
+/* ---------- 背景 ---------- */
+#web_bg {
+  background:
+    radial-gradient(ellipse at 50% 10%, rgba(90, 130, 230, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 30%, rgba(140, 100, 230, 0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 20% 70%, rgba(64, 200, 224, 0.04) 0%, transparent 40%),
+    linear-gradient(rgba(6,11,20,0.78), rgba(6,11,20,0.78)),
+    url(images/bg/cerydra.jpg) !important;
+  background-size: auto, auto, auto, auto, cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+  opacity: 1 !important;
+}
 
 /* ---------- 导航栏 ---------- */
 #nav {
