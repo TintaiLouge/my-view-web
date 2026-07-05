@@ -3,9 +3,11 @@
    ============================================ */
 
 /* FOUC */
-html.landing-locked body > *:not(#landing-overlay) {
+html.landing-locked body > *:not(#landing-overlay):not(#loading-box) {
   visibility: hidden !important; opacity: 0 !important;
 }
+/* loading 框始终可见 */
+#loading-box { z-index: 100000 !important; }
 html.landing-locked body { overflow: hidden; background: #fffef8; }
 
 /* 浮层 */
@@ -13,7 +15,7 @@ html.landing-locked body { overflow: hidden; background: #fffef8; }
   position: fixed; inset: 0; z-index: 99999;
   background:
     linear-gradient(rgba(255,254,248,0.88), rgba(255,254,248,0.88)),
-    url(images/bg/honkai_all.jpg) center/cover;
+    url(../images/bg/honkai_all.jpg) center/cover;
   display: flex; flex-direction: column; justify-content: center; align-items: center;
   animation: overlayFadeIn 0.4s ease-out;
 }

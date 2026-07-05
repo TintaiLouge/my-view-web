@@ -19,8 +19,8 @@
   if (!isHome) { document.documentElement.classList.remove('landing-locked'); return; }
 
   // ── 配置（图片换为自己的）──────────────
-  var cardImage = 'images/illustrations/card-1.jpg';
-  var brandImage = 'images/covers/iuno.jpg';
+  var cardImage = 'https://media.prts.wiki/5/5d/Skin_brand_%E7%94%9F%E5%91%BD%E4%B9%8B%E5%9C%B0.png';
+  var brandImage = 'images/covers/iuno-抠图.png';
 
   // ── 工具（和原版一样）───────────────────
   var rotate = function (cursorPosition, centerPosition, threshold) {
@@ -165,9 +165,31 @@
   function enterSite(overlay) {
     if (overlay.classList.contains('landing-exit')) return;
     overlay.classList.add('landing-exit');
+    document.body.style.background = "url('images/bg/cerydra.jpg') center / cover fixed";
+    document.body.style.backgroundColor = '#060b14';
+
+    // 加载动画
+    var loader = document.createElement('div');
+    loader.id = 'landing-loader';
+    loader.innerHTML =
+      '<svg width="48" height="48" viewBox="0 0 48 48">' +
+      '<circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>' +
+      '<circle cx="24" cy="24" r="20" fill="none" stroke="#5b9cf5" stroke-width="3" stroke-dasharray="90 130" stroke-linecap="round">' +
+      '  <animateTransform attributeName="transform" type="rotate" from="0 24 24" to="360 24 24" dur="0.8s" repeatCount="indefinite"/>' +
+      '</circle>' +
+      '</svg>' +
+      '<p style="color:rgba(255,255,255,0.5);font-size:0.8rem;letter-spacing:2px;margin-top:16px;">LOADING</p>';
+    loader.style.cssText =
+      'position:fixed;inset:0;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(6,11,20,0.92);opacity:0;transition:opacity 0.3s;';
+    document.body.appendChild(loader);
+    requestAnimationFrame(function () { loader.style.opacity = '1'; });
+
     setTimeout(function () {
       document.documentElement.classList.remove('landing-locked');
       if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      // loading 淡出
+      loader.style.opacity = '0';
+      setTimeout(function () { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 400);
     }, 500);
   }
 
