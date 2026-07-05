@@ -102,9 +102,11 @@
     updateCenter(card);
     window.addEventListener('resize', function () { updateCenter(card); });
 
-    // 容器 zoom（原版 .card-container.hover → zoomed）
-    container.addEventListener('mouseenter', function () { container.classList.add('zoomed'); });
-    container.addEventListener('mouseleave', function () { container.classList.remove('zoomed'); });
+    // 容器 zoom（改用 mouseover/mouseout 确保触发）
+    container.addEventListener('mouseover', function () { container.classList.add('zoomed'); });
+    container.addEventListener('mouseout', function (e) {
+      if (!container.contains(e.relatedTarget)) container.classList.remove('zoomed');
+    });
 
     // 卡片内部 3D
     card.addEventListener('mouseenter', function () {
