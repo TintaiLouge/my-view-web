@@ -41,6 +41,7 @@ body {
   background-size: cover !important;
   background-position: center !important;
   background-attachment: fixed !important;
+  z-index: -2 !important;
 }
 
 /* 暗色遮罩 */
@@ -50,21 +51,17 @@ body {
   inset: 0;
   background: linear-gradient(rgba(6,11,20,0.78), rgba(6,11,20,0.78));
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
 }
 
-/* 网格 + 星点纹理 */
+/* 移除 body-wrap 的纹理伪元素（避免遮住背景） */
 #body-wrap::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image:
-    radial-gradient(rgba(255,255,255,0.04) 0.5px, transparent 0.5px),
-    linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
-  background-size: 80px 80px, 40px 40px, 40px 40px;
-  pointer-events: none;
+  display: none !important;
+}
+
+/* body 兜底 */
+body {
+  background: #060b14 !important;
 }
 
 /* ---------- 导航栏 ---------- */
