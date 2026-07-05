@@ -165,6 +165,9 @@
   function enterSite(overlay) {
     if (overlay.classList.contains('landing-exit')) return;
     overlay.classList.add('landing-exit');
+    // 解锁前给 body 设背景
+    document.body.style.background = "url('images/bg/cerydra.jpg') center / cover fixed";
+    document.body.style.backgroundColor = '#060b14';
     setTimeout(function () {
       document.documentElement.classList.remove('landing-locked');
       if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
