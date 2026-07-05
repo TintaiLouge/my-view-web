@@ -1,267 +1,160 @@
 /* ============================================
-   JINGYU · Landing Page （单卡片主页）
-   3D 透视 / 视差分层 / 毛玻璃背景
+   JINGYU · Landing — 完全照抄风格指导
    ============================================ */
 
-/* ---------- FOUC 防护 ---------- */
+/* FOUC */
 html.landing-locked body > *:not(#landing-overlay) {
-  visibility: hidden !important;
-  opacity: 0 !important;
+  visibility: hidden !important; opacity: 0 !important;
 }
-html.landing-locked body {
-  overflow: hidden;
-}
+html.landing-locked body { overflow: hidden; background: #fffef8; }
 
-/* ---------- 浮层 ---------- */
+/* 浮层 = 原版 body */
 #landing-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  animation: overlayFadeIn 0.5s ease-out;
+  position: fixed; inset: 0; z-index: 99999;
+  background: #fffef8;
+  display: flex; justify-content: center; align-items: center;
+  min-height: 100vh; margin: 0; padding: 40px 0;
+  animation: overlayFadeIn 0.4s ease-out;
 }
 @keyframes overlayFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* ---------- 满屏毛玻璃背景 ---------- */
-.landing-bg-full {
-  position: absolute;
-  inset: -40px;
-  z-index: 0;
-  background-size: cover;
-  background-position: center;
-  filter: blur(30px) saturate(0.6) brightness(0.5);
-  transform: scale(1.1);
+/* CTA */
+.landing-cta {
+  position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%);
+  text-align: center; cursor: pointer; z-index: 10;
+  animation: ctaPulse 2.5s ease-in-out infinite;
 }
-.landing-bg-glass {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: rgba(255, 254, 248, 0.72);
-  backdrop-filter: blur(10px) saturate(120%);
-  -webkit-backdrop-filter: blur(10px) saturate(120%);
-}
+.landing-cta-text { color: #bbb; font-size: 0.78rem; letter-spacing: 3px; font-weight: 500; }
+.landing-cta-arrow { display: block; color: #ccc; font-size: 1.2rem; margin-top: 2px; animation: arrowBounce 1.8s ease-in-out infinite; }
+@keyframes ctaPulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
+@keyframes arrowBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
 
-/* 点阵纹理 */
-.landing-bg-dots {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background-image:
-    radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
-  background-size: 28px 28px;
-  pointer-events: none;
-}
+/* ======== 以下原样照抄风格指导 ======== */
 
-/* ---------- 卡片容器 ---------- */
+/* 容器：缩放层 */
 .landing-card-container {
-  position: relative;
-  z-index: 2;
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transform: scale(1);
+  width: 120px; height: 276px;
+  display: inline-block; position: relative;
+  margin: 8px;
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1), z-index .4s ease;
+  transform: scale(1); z-index: 0;
+}
+.landing-card-container.zoomed {
+  transform: scale(1.2); z-index: 1;
 }
 
-/* ---------- 卡片主体 ---------- */
+/* 卡片主体 */
 .landing-card {
-  width: 200px;
-  height: 460px;
-  position: relative;
-  background: #fff;
-  cursor: pointer;
-  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.4));
+  width: 120px; height: 276px;
+  display: inline-block; position: relative;
+  background: #fff; cursor: pointer;
+  filter: drop-shadow(0 5px 5px rgba(0,0,0,.5));
+  transition: all .2s ease;
   font-size: 0;
-  will-change: transform;
-  /* 关键：transform 过渡缓冲 */
-  transition: transform 0.25s ease-out, filter 0.25s ease-out, box-shadow 0.25s ease-out;
 }
 
+/* 白色底层 */
 .landing-card-bg {
-  position: absolute;
-  inset: 0 0 56px;
-  background: #fff;
-  z-index: 0;
+  position: absolute; inset: 0 0 36px;
+  background: #fff; z-index: 0;
 }
 
-/* 图片区 */
+/* 图片区域 */
 .landing-image-area {
-  position: absolute;
-  bottom: 56px;
-  left: 0;
-  width: 200px;
-  height: 404px;
-  z-index: 1;
-  overflow: hidden;
+  position: absolute; bottom: 36px; left: 0;
+  width: 120px; height: 240px;
+  z-index: 1; overflow: hidden;
 }
 .landing-image-main {
-  position: absolute;
-  z-index: 1;
-  transition: left 0.15s ease-out, top 0.15s ease-out, filter 0.15s ease-out;
+  position: absolute; z-index: 1;
+  transition: left .1s ease-out, top .1s ease-out, filter .1s ease-out;
 }
-.landing-image-main img {
-  width: 200px;
-  height: 404px;
-  object-fit: cover;
-  display: block;
-}
+.landing-image-main img { width: 120px; height: 240px; object-fit: cover; display: block; }
 
 /* 点阵 */
 .landing-dot-pattern {
-  position: absolute;
-  right: -60px;
-  bottom: -30px;
-  width: 240px;
-  height: 120px;
+  position: absolute; right: -50px; bottom: -33px;
+  width: 200px; height: 100px;
   background-image:
-    radial-gradient(rgba(0,0,0,0.14) 5%, transparent 6%),
-    radial-gradient(rgba(0,0,0,0.14) 11%, transparent 12%),
-    radial-gradient(rgba(0,0,0,0.14) 15%, transparent 16%),
-    radial-gradient(rgba(0,0,0,0.14) 19%, transparent 20%),
-    radial-gradient(rgba(0,0,0,0.14) 24%, transparent 25%),
-    radial-gradient(rgba(0,0,0,0.14) 29%, transparent 30%),
-    radial-gradient(rgba(0,0,0,0.14) 31%, transparent 32%);
+    radial-gradient(rgba(0,0,0,.2) 6%, transparent 7%),
+    radial-gradient(rgba(0,0,0,.2) 12%, transparent 13%),
+    radial-gradient(rgba(0,0,0,.2) 16%, transparent 17%),
+    radial-gradient(rgba(0,0,0,.2) 20%, transparent 21%),
+    radial-gradient(rgba(0,0,0,.2) 25%, transparent 26%),
+    radial-gradient(rgba(0,0,0,.2) 26%, transparent 27%),
+    radial-gradient(rgba(0,0,0,.2) 30%, transparent 31%),
+    radial-gradient(rgba(0,0,0,.2) 32%, transparent 33%),
+    radial-gradient(rgba(0,0,0,.2) 35%, transparent 36%),
+    radial-gradient(rgba(0,0,0,.2) 32%, transparent 33%),
+    radial-gradient(rgba(0,0,0,.2) 35%, transparent 36%),
+    radial-gradient(rgba(0,0,0,.2) 32%, transparent 33%),
+    radial-gradient(rgba(0,0,0,.2) 35%, transparent 36%),
+    radial-gradient(rgba(0,0,0,.2) 32%, transparent 33%),
+    radial-gradient(rgba(0,0,0,.2) 35%, transparent 36%),
+    radial-gradient(rgba(0,0,0,.2) 32%, transparent 33%);
   background-size: 10px 10px;
   background-position:
-    0 0, 5px 5px, 0 10px, 5px 15px, 0 20px, 5px 25px,
-    0 30px, 5px 35px, 0 40px, 5px 45px, 0 50px, 5px 55px,
-    0 60px, 5px 65px, 0 70px, 5px 75px, 0 80px, 5px 85px,
-    0 90px, 5px 95px, 0 100px, 5px 105px;
+    0 0, 5px 5px,
+    0 10px, 5px 15px,
+    0 20px, 5px 25px,
+    0 30px, 5px 35px,
+    0 40px, 5px 45px,
+    0 50px, 5px 55px,
+    0 60px, 5px 65px,
+    0 70px, 5px 75px,
+    0 80px, 5px 85px,
+    0 90px, 5px 95px,
+    0 100px, 5px 105px;
   background-repeat: repeat-x;
-  transform: rotate(-15deg);
-  z-index: 0;
-}
-
-/* ---------- 叠加层（表面后面左上角品牌层）---------- */
-.landing-overlay-area {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 200px;
-  height: 404px;
-  overflow: hidden;
-  z-index: 2;
-  transition: all 0.4s ease;
-  transform-origin: left top;
-  pointer-events: none;
-}
-.landing-overlay-img {
-  filter: invert();
-  position: relative;
-  transition: left 0.15s ease-out, top 0.15s ease-out;
-}
-.landing-brand-mark {
-  position: absolute;
-  top: 18px;
-  left: -24px;
-  width: 160px;
-}
-.landing-brand-mark img {
-  width: 100%;
-  opacity: 0.9;
+  transform: rotate(-15deg); z-index: 0;
 }
 
 /* Badge */
+.landing-badge, .landing-badge-shadow {
+  position: absolute; top: 5px; right: -7px; height: 20px;
+}
 .landing-badge {
-  position: absolute;
-  top: 8px;
-  right: -6px;
-  width: 80px;
-  height: 22px;
-  background: #0224ff;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 22px;
-  text-align: center;
-  z-index: 3;
-  letter-spacing: 0.5px;
+  width: 66px; background: #0224ff; color: #fff;
+  font-size: 12px; line-height: 20px; text-align: center;
+  box-sizing: border-box; z-index: 2;
 }
 .landing-badge-shadow {
-  position: absolute;
-  top: 8px;
-  right: -6px;
-  width: 32px;
-  height: 22px;
-  background: #1f1f8a;
-  transform: rotate(-45deg);
-  transform-origin: bottom right;
-  z-index: 2;
+  width: 30px; background: #1f1f8a;
+  transform: rotate(-45deg); transform-origin: bottom right; z-index: -1;
 }
 
-/* 底部文字 */
-.landing-title {
-  position: absolute;
-  bottom: 34px;
-  left: 8px;
-  color: #5b5b5b;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 14px;
-  z-index: 3;
+/* 标题 */
+.landing-title, .landing-subtitle {
+  position: absolute; left: 4px; font-weight: bold; line-height: 12px;
 }
+.landing-title { top: 244px; color: #5b5b5b; font-size: 13px; }
 .landing-subtitle {
-  position: absolute;
-  bottom: 6px;
-  left: 8px;
-  color: #9d9d9d;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 14px;
-  white-space: nowrap;
-  transform: scale(0.5);
-  transform-origin: left;
-  z-index: 3;
+  bottom: 4px; color: #9d9d9d; font-size: 16px;
+  white-space: nowrap; transform: scale(.5); transform-origin: left;
 }
 
-/* ---------- CTA ---------- */
-.landing-cta {
-  z-index: 10;
-  margin-top: 40px;
-  text-align: center;
-  animation: ctaPulse 2.5s ease-in-out infinite;
-  cursor: pointer;
-}
-.landing-cta-text {
-  color: #bbb;
-  font-size: 0.8rem;
-  letter-spacing: 3px;
-  font-weight: 500;
-}
-.landing-cta-arrow {
-  display: block;
-  color: #ccc;
-  font-size: 1.2rem;
-  margin-top: 2px;
-  animation: arrowBounce 1.8s ease-in-out infinite;
-}
-@keyframes ctaPulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
-}
-@keyframes arrowBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(5px); }
-}
-
-/* ---------- 退出动画 ---------- */
-#landing-overlay.landing-exit {
-  animation: overlayFadeOut 0.6s ease-in forwards;
+/* 叠加层（反相品牌标） */
+.landing-overlay-area {
+  position: absolute; top: 0;
+  width: 120px; height: 240px;
+  overflow: hidden; z-index: 2;
+  transition: all .4s ease; transform-origin: left top;
   pointer-events: none;
 }
-@keyframes overlayFadeOut {
-  0% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.05); }
-}
+.landing-overlay-img { filter: invert(); position: relative; transition: left .1s ease-out, top .1s ease-out; }
+.landing-brand-mark { position: absolute; top: 8px; left: -16px; width: 100px; }
 
-/* ---------- 响应式 ---------- */
+/* 退出 */
+#landing-overlay.landing-exit { animation: overlayFadeOut 0.5s ease-in forwards; pointer-events: none; }
+@keyframes overlayFadeOut { 0%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(1.05)} }
+
+/* 响应式 */
 @media screen and (max-width: 768px) {
-  .landing-card { width: 150px; height: 345px; }
-  .landing-card-bg { inset: 0 0 42px; }
-  .landing-image-area { width: 150px; height: 303px; bottom: 42px; }
-  .landing-image-main img { width: 150px; height: 303px; }
-  .landing-overlay-area { width: 150px; height: 303px; }
-  .landing-title { font-size: 12px; bottom: 28px; }
-  .landing-badge { width: 64px; font-size: 10px; }
+  .landing-card-container { width: 100px; height: 230px; }
+  .landing-card { width: 100px; height: 230px; }
+  .landing-card-bg { inset: 0 0 30px; }
+  .landing-image-area { width: 100px; height: 200px; bottom: 30px; }
+  .landing-image-main img { width: 100px; height: 200px; }
+  .landing-overlay-area { width: 100px; height: 200px; }
+  .landing-title { font-size: 11px; top: 204px; }
 }
