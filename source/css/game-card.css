@@ -36,15 +36,21 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- 丙烯酸背景 ---------- */
+/* ---------- 背景 ---------- */
 #web_bg {
-  background:
-    radial-gradient(ellipse at 50% 10%, rgba(90, 130, 230, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 30%, rgba(140, 100, 230, 0.06) 0%, transparent 45%),
-    radial-gradient(ellipse at 20% 70%, rgba(64, 200, 224, 0.05) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 90%, rgba(40, 60, 140, 0.08) 0%, transparent 40%),
-    var(--bg-deep) !important;
-  opacity: 1 !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+}
+
+/* 暗色遮罩 */
+#web_bg::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(rgba(6,11,20,0.78), rgba(6,11,20,0.78));
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* 网格 + 星点纹理 */
@@ -63,46 +69,30 @@ body {
 
 /* ---------- 导航栏 ---------- */
 #nav {
-  background: rgba(6, 10, 20, 0.75) !important;
+  background: rgba(6, 10, 20, 0.7) !important;
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-bottom: 1px solid var(--glass-border) !important;
-  height: 52px !important;
-  display: flex !important;
-  align-items: center !important;
-  padding: 0 20px !important;
 }
 
 #nav .site-page,
 #nav #site-name {
   color: var(--text-secondary) !important;
   font-weight: 500;
-  font-size: 0.85rem;
-  letter-spacing: 0.6px;
-  transition: color 0.3s;
+  font-size: 0.88rem;
+  letter-spacing: 0.8px;
+  transition: color 0.25s;
 }
-#nav .site-page:hover { color: #fff !important; }
-#nav #site-name { color: #fff !important; font-size: 1rem; font-weight: 700; letter-spacing: 1.5px; }
 
-/* 隐藏搜索 */
-#nav #search-button { display: none !important; }
-
-/* 导航下划线：中间向两边延展 */
-#nav .site-page { position: relative; }
-#nav .site-page::after {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  width: 70%;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 1px;
-  transform: translateX(-50%) scaleX(0);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+#nav .site-page:hover {
+  color: var(--accent-glow) !important;
 }
-#nav .site-page:hover::after {
-  transform: translateX(-50%) scaleX(1);
+
+#nav #site-name {
+  color: #fff !important;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
 }
 
 /* ---------- Hero 头部 ---------- */

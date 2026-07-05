@@ -70,7 +70,7 @@ category_per_img:
 footer_img: false
 
 # Website Background — warm paper color matching game card aesthetic
-background: '#fffef8'
+background: images/bg/cerydra.jpg
 
 cover:
   index_enable: true
