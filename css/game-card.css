@@ -43,7 +43,7 @@ body {
     radial-gradient(ellipse at 80% 30%, rgba(140, 100, 230, 0.06) 0%, transparent 45%),
     radial-gradient(ellipse at 20% 70%, rgba(64, 200, 224, 0.04) 0%, transparent 40%),
     linear-gradient(rgba(6,11,20,0.78), rgba(6,11,20,0.78)),
-    url(../images/bg/cerydra_%E6%8A%A0%E5%9B%BE.png) !important;
+    url(../images/bg/cerydra.jpg) !important;
   background-size: auto, auto, auto, auto, cover !important;
   background-position: center !important;
   background-attachment: fixed !important;
