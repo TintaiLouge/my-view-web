@@ -19,7 +19,7 @@
   if (!isHome) { document.documentElement.classList.remove('landing-locked'); return; }
 
   // ── 配置（图片换为自己的）──────────────
-  var cardImage = 'images/illustrations/fami_01.png';
+  var cardImage = 'images/illustrations/fami_01.jpg';
   var brandImage = 'https://media.prts.wiki/5/5d/Skin_brand_%E7%94%9F%E5%91%BD%E4%B9%8B%E5%9C%B0.png';
 
   // ── 工具（和原版一样）───────────────────
