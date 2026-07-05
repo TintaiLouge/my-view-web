@@ -1,7 +1,7 @@
 /**
  * ============================================
  * JINGYU · Landing Page （单卡片主页）
- * 3D 透视 / 视差分层 / 每次进入
+ * 3D 透视 / 视差分层 / 毛玻璃背景
  * ============================================
  */
 
@@ -26,7 +26,7 @@
     return;
   }
 
-  // ── 卡片数据（默认值，可被 landing-config.json 覆盖）──────
+  // ── 卡片数据 ──────────────────────────────
   var cardConfig = {
     cardImage: 'images/illustrations/card-1.jpg',
     cardTitle: 'JINGYU',
@@ -50,33 +50,31 @@
 
   var cardCenter = null;
 
-  // ── 背景图片池（用仓库已有图） ────────────
-  var bgImages = [
-    'images/bg/honkai_all.jpg',
-    'images/bg/sekai_03.jpg',
-    'images/bg/fate01.jpg',
-    'images/bg/cerydra.jpg',
-  ];
-
   // ── 构建浮层 ──────────────────────────────
   function createOverlay() {
     var overlay = document.createElement('div');
     overlay.id = 'landing-overlay';
 
-    // 背景氛围层
-    var bgLayer = document.createElement('div');
-    bgLayer.className = 'landing-bg';
-    // 随机选3张做背景装饰
-    var picked = bgImages.sort(function () { return Math.random() - 0.5; }).slice(0, 3);
-    for (var b = 0; b < 3; b++) {
-      var img = document.createElement('img');
-      img.className = 'landing-bg-img';
-      img.src = picked[b];
-      bgLayer.appendChild(img);
-    }
-    overlay.appendChild(bgLayer);
+    // 满屏毛玻璃背景（随机选一张仓库图）
+    var bgPics = [
+      'images/bg/honkai_all.jpg',
+      'images/bg/fate01.jpg',
+      'images/bg/cerydra.jpg',
+      'images/bg/sekai_03.jpg',
+    ];
+    var bgSrc = bgPics[Math.floor(Math.random() * bgPics.length)];
 
-    // 背景点阵
+    var bgFull = document.createElement('div');
+    bgFull.className = 'landing-bg-full';
+    bgFull.style.backgroundImage = 'url(' + bgSrc + ')';
+    overlay.appendChild(bgFull);
+
+    // 毛玻璃罩
+    var bgGlass = document.createElement('div');
+    bgGlass.className = 'landing-bg-glass';
+    overlay.appendChild(bgGlass);
+
+    // 点阵
     var dots = document.createElement('div');
     dots.className = 'landing-bg-dots';
     overlay.appendChild(dots);
@@ -87,22 +85,33 @@
 
     var card = document.createElement('div');
     card.className = 'landing-card';
+    // 初始 transform（有过渡缓冲）
+    card.style.transform = 'perspective(500px) scale(1)';
+    card.style.boxShadow = '0 0 0 0 rgba(0,0,0,0.2)';
+
+    // 用仓库里的小图做品牌叠层
+    var brandImg = 'images/covers/iuno.jpg'; // 小图当品牌叠层用
 
     card.innerHTML =
       '<div class="landing-card-bg"></div>' +
+      // 点阵
       '<div class="landing-image-area"><div class="landing-dot-pattern"></div></div>' +
+      // 主图
       '<div class="landing-image-area" style="overflow:inherit;">' +
       '  <div class="landing-image-main" style="left:0;top:0;filter:none;">' +
       '    <img src="' + cardConfig.cardImage + '" alt="' + cardConfig.cardTitle + '" loading="eager">' +
       '  </div>' +
       '</div>' +
+      // 叠加层（品牌图，反相显示）
       '<div class="landing-overlay-area" style="transform:translateZ(0) scale(1);">' +
       '  <div class="landing-overlay-img">' +
-      '    <div class="landing-brand-mark">' + cardConfig.cardTitle + '</div>' +
+      '    <div class="landing-brand-mark"><img src="' + brandImg + '" alt="brand"></div>' +
       '  </div>' +
       '</div>' +
+      // Badge
       '<div class="landing-badge">' + cardConfig.cardBadge + '</div>' +
       '<div class="landing-badge-shadow"></div>' +
+      // 标题
       '<div class="landing-title">' + cardConfig.cardTitle + '</div>' +
       '<div class="landing-subtitle">' + cardConfig.cardSubtitle + '</div>';
 
@@ -118,9 +127,7 @@
     cta.innerHTML =
       '<span class="landing-cta-text">点击卡片进入</span>' +
       '<span class="landing-cta-arrow">⌄</span>';
-    cta.addEventListener('click', function () {
-      enterSite(overlay);
-    });
+    cta.addEventListener('click', function () { enterSite(overlay); });
     overlay.appendChild(cta);
 
     document.body.appendChild(overlay);
@@ -136,7 +143,7 @@
     });
   }
 
-  // ── 3D 追踪 ──────────────────────────────
+  // ── 3D 追踪（带缓冲）─────────────────────
   function updateCenter(card) {
     var rect = card.getBoundingClientRect();
     cardCenter = {
@@ -149,27 +156,31 @@
     updateCenter(card);
     window.addEventListener('resize', function () { updateCenter(card); });
 
+    var overlayArea = card.querySelector('.landing-overlay-area');
+    var overlayImg = card.querySelector('.landing-overlay-img');
+    var imageMain = card.querySelector('.landing-image-main');
+
     card.addEventListener('mouseenter', function () {
       updateCenter(card);
-      var oa = card.querySelector('.landing-overlay-area');
-      if (oa) {
-        oa.style.overflow = 'inherit';
-        oa.style.left = '-24px';
-        oa.style.top = '-36px';
-        oa.style.transform = 'scale(0.7)';
+      // 展开叠加层，露出品牌图
+      if (overlayArea) {
+        overlayArea.style.overflow = 'inherit';
+        overlayArea.style.left = '-20px';
+        overlayArea.style.top = '-30px';
+        overlayArea.style.transform = 'scale(0.7)';
       }
     });
 
     card.addEventListener('mouseleave', function () {
+      // 平滑复位
       card.style.transform = 'perspective(500px) scale(1)';
       card.style.filter = 'drop-shadow(0 8px 12px rgba(0,0,0,0.4))';
       card.style.boxShadow = '0 0 0 0 rgba(0,0,0,0.2)';
-      var imgMain = card.querySelector('.landing-image-main');
-      if (imgMain) imgMain.style.cssText = 'left:0;top:0;filter:none;';
-      var oa = card.querySelector('.landing-overlay-area');
-      if (oa) oa.style.cssText = 'left:0;top:0;filter:none;transform:translateZ(0) scale(1);overflow:hidden;';
-      var oi = card.querySelector('.landing-overlay-img');
-      if (oi) oi.style.cssText = 'left:0;top:0;';
+      if (imageMain) imageMain.style.cssText = 'left:0;top:0;filter:none;';
+      if (overlayArea) {
+        overlayArea.style.cssText = 'left:0;top:0;filter:none;transform:translateZ(0) scale(1);overflow:hidden;';
+      }
+      if (overlayImg) overlayImg.style.cssText = 'left:0;top:0;';
     });
 
     card.addEventListener('mousemove', function (e) {
@@ -179,22 +190,26 @@
       var dx = e.clientX - cardCenter.centerX;
       var dy = e.clientY - cardCenter.centerY;
 
+      // 通过 style 更新（CSS transition 提供缓冲）
       card.style.transform =
         'translateZ(0) perspective(1000px) rotateY(' + calcX + 'deg) rotateX(' + (-calcY / 1.5) + 'deg)';
       card.style.filter = 'brightness(' + brightness(e.clientY, cardCenter.centerY) + ')';
       card.style.boxShadow = (-calcX) + 'px ' + (-calcY) + 'px 12px 0 rgba(0,0,20,0.25)';
 
-      var oi = card.querySelector('.landing-overlay-img');
-      if (oi) { oi.style.left = (dx / 10) + 'px'; oi.style.top = (dy / 15) + 'px'; }
+      // 叠加层视差
+      if (overlayImg) {
+        overlayImg.style.left = (dx / 10) + 'px';
+        overlayImg.style.top = (dy / 15) + 'px';
+      }
+      if (overlayArea) {
+        overlayArea.style.filter = 'drop-shadow(' + (-calcX/7) + 'px ' + (-calcY/7) + 'px 0 white)';
+      }
 
-      var oa = card.querySelector('.landing-overlay-area');
-      if (oa) oa.style.filter = 'drop-shadow(' + (-calcX/7) + 'px ' + (-calcY/7) + 'px 0 white)';
-
-      var im = card.querySelector('.landing-image-main');
-      if (im) {
-        im.style.left = (dx / 8) + 'px';
-        im.style.top = (dy / 13) + 'px';
-        im.style.filter = 'drop-shadow(' + (-calcX/2) + 'px ' + (-calcY/2) + 'px 5px rgba(0,0,20,0.2))';
+      // 主图视差
+      if (imageMain) {
+        imageMain.style.left = (dx / 8) + 'px';
+        imageMain.style.top = (dy / 13) + 'px';
+        imageMain.style.filter = 'drop-shadow(' + (-calcX/2) + 'px ' + (-calcY/2) + 'px 5px rgba(0,0,20,0.2))';
       }
     });
   }
@@ -211,7 +226,6 @@
 
   // ── 加载配置并启动 ────────────────────────
   function boot() {
-    // 尝试加载配置文件
     fetch('landing-config.json')
       .then(function (r) { return r.json(); })
       .then(function (cfg) {
@@ -220,12 +234,8 @@
         if (cfg.cardSubtitle) cardConfig.cardSubtitle = cfg.cardSubtitle;
         if (cfg.cardBadge) cardConfig.cardBadge = cfg.cardBadge;
       })
-      .catch(function () {
-        // 使用默认值
-      })
-      .finally(function () {
-        createOverlay();
-      });
+      .catch(function () {})
+      .finally(function () { createOverlay(); });
   }
 
   if (document.readyState === 'loading') {

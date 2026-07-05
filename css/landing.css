@@ -1,6 +1,6 @@
 /* ============================================
    JINGYU · Landing Page （单卡片主页）
-   3D 透视 / 视差分层 / 背景氛围
+   3D 透视 / 视差分层 / 毛玻璃背景
    ============================================ */
 
 /* ---------- FOUC 防护 ---------- */
@@ -10,7 +10,6 @@ html.landing-locked body > *:not(#landing-overlay) {
 }
 html.landing-locked body {
   overflow: hidden;
-  background: #fffef8;
 }
 
 /* ---------- 浮层 ---------- */
@@ -18,7 +17,6 @@ html.landing-locked body {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: #fffef8;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,33 +26,34 @@ html.landing-locked body {
 }
 @keyframes overlayFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* ---------- 背景层 ---------- */
-.landing-bg {
+/* ---------- 满屏毛玻璃背景 ---------- */
+.landing-bg-full {
+  position: absolute;
+  inset: -40px;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(30px) saturate(0.6) brightness(0.5);
+  transform: scale(1.1);
+}
+.landing-bg-glass {
   position: absolute;
   inset: 0;
   z-index: 0;
-  pointer-events: none;
+  background: rgba(255, 254, 248, 0.72);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
-.landing-bg-img {
-  position: absolute;
-  width: 280px;
-  height: 280px;
-  object-fit: cover;
-  border-radius: 50%;
-  opacity: 0.12;
-  filter: blur(2px) saturate(0.5);
-}
-.landing-bg-img:nth-child(1) { top: -60px; left: -60px; }
-.landing-bg-img:nth-child(2) { bottom: -80px; right: -40px; }
-.landing-bg-img:nth-child(3) { top: 50%; left: 50%; transform: translate(-50%,-50%); width: 400px; height: 400px; opacity: 0.06; }
 
-/* 背景点阵纹理 */
+/* 点阵纹理 */
 .landing-bg-dots {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background-image:
-    radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+    radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
   background-size: 28px 28px;
+  pointer-events: none;
 }
 
 /* ---------- 卡片容器 ---------- */
@@ -65,7 +64,7 @@ html.landing-locked body {
   transform: scale(1);
 }
 
-/* ---------- 卡片主体（大尺寸单卡） ---------- */
+/* ---------- 卡片主体 ---------- */
 .landing-card {
   width: 200px;
   height: 460px;
@@ -73,9 +72,10 @@ html.landing-locked body {
   background: #fff;
   cursor: pointer;
   filter: drop-shadow(0 8px 12px rgba(0,0,0,0.4));
-  transition: filter 0.15s ease;
   font-size: 0;
   will-change: transform;
+  /* 关键：transform 过渡缓冲 */
+  transition: transform 0.25s ease-out, filter 0.25s ease-out, box-shadow 0.25s ease-out;
 }
 
 .landing-card-bg {
@@ -98,7 +98,7 @@ html.landing-locked body {
 .landing-image-main {
   position: absolute;
   z-index: 1;
-  transition: left 0.07s ease-out, top 0.07s ease-out, filter 0.07s ease-out;
+  transition: left 0.15s ease-out, top 0.15s ease-out, filter 0.15s ease-out;
 }
 .landing-image-main img {
   width: 200px;
@@ -115,14 +115,13 @@ html.landing-locked body {
   width: 240px;
   height: 120px;
   background-image:
-    radial-gradient(rgba(0,0,0,0.16) 5%, transparent 6%),
-    radial-gradient(rgba(0,0,0,0.16) 11%, transparent 12%),
-    radial-gradient(rgba(0,0,0,0.16) 15%, transparent 16%),
-    radial-gradient(rgba(0,0,0,0.16) 19%, transparent 20%),
-    radial-gradient(rgba(0,0,0,0.16) 24%, transparent 25%),
-    radial-gradient(rgba(0,0,0,0.16) 25%, transparent 26%),
-    radial-gradient(rgba(0,0,0,0.16) 29%, transparent 30%),
-    radial-gradient(rgba(0,0,0,0.16) 31%, transparent 32%);
+    radial-gradient(rgba(0,0,0,0.14) 5%, transparent 6%),
+    radial-gradient(rgba(0,0,0,0.14) 11%, transparent 12%),
+    radial-gradient(rgba(0,0,0,0.14) 15%, transparent 16%),
+    radial-gradient(rgba(0,0,0,0.14) 19%, transparent 20%),
+    radial-gradient(rgba(0,0,0,0.14) 24%, transparent 25%),
+    radial-gradient(rgba(0,0,0,0.14) 29%, transparent 30%),
+    radial-gradient(rgba(0,0,0,0.14) 31%, transparent 32%);
   background-size: 10px 10px;
   background-position:
     0 0, 5px 5px, 0 10px, 5px 15px, 0 20px, 5px 25px,
@@ -134,33 +133,33 @@ html.landing-locked body {
   z-index: 0;
 }
 
-/* 叠加层 */
+/* ---------- 叠加层（表面后面左上角品牌层）---------- */
 .landing-overlay-area {
   position: absolute;
   top: 0;
+  left: 0;
   width: 200px;
   height: 404px;
   overflow: hidden;
   z-index: 2;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   transform-origin: left top;
   pointer-events: none;
 }
 .landing-overlay-img {
   filter: invert();
   position: relative;
-  transition: left 0.07s ease-out, top 0.07s ease-out;
+  transition: left 0.15s ease-out, top 0.15s ease-out;
 }
 .landing-brand-mark {
   position: absolute;
-  top: 14px;
-  left: -20px;
-  width: 140px;
-  font-size: 16px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: #000;
-  text-align: center;
+  top: 18px;
+  left: -24px;
+  width: 160px;
+}
+.landing-brand-mark img {
+  width: 100%;
+  opacity: 0.9;
 }
 
 /* Badge */
@@ -225,14 +224,14 @@ html.landing-locked body {
   cursor: pointer;
 }
 .landing-cta-text {
-  color: #aaa;
+  color: #bbb;
   font-size: 0.8rem;
   letter-spacing: 3px;
   font-weight: 500;
 }
 .landing-cta-arrow {
   display: block;
-  color: #bbb;
+  color: #ccc;
   font-size: 1.2rem;
   margin-top: 2px;
   animation: arrowBounce 1.8s ease-in-out infinite;
@@ -264,8 +263,5 @@ html.landing-locked body {
   .landing-image-main img { width: 150px; height: 303px; }
   .landing-overlay-area { width: 150px; height: 303px; }
   .landing-title { font-size: 12px; bottom: 28px; }
-  .landing-brand-mark { font-size: 12px; width: 100px; }
   .landing-badge { width: 64px; font-size: 10px; }
-  .landing-bg-img { width: 180px; height: 180px; }
-  .landing-bg-img:nth-child(3) { width: 260px; height: 260px; }
 }
