@@ -39,98 +39,83 @@ body {
 /* ---------- 丙烯酸背景 ---------- */
 #web_bg {
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(90, 120, 220, 0.06) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 20%, rgba(120, 80, 220, 0.04) 0%, transparent 45%),
-    radial-gradient(ellipse at 20% 80%, rgba(64, 200, 224, 0.03) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 10%, rgba(90, 130, 230, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 30%, rgba(140, 100, 230, 0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 20% 70%, rgba(64, 200, 224, 0.05) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 90%, rgba(40, 60, 140, 0.08) 0%, transparent 40%),
     var(--bg-deep) !important;
   opacity: 1 !important;
 }
 
-/* 网格纹理层 */
+/* 网格 + 星点纹理 */
 #body-wrap::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: -1;
   background-image:
-    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
-  background-size: 32px 32px;
+    radial-gradient(rgba(255,255,255,0.04) 0.5px, transparent 0.5px),
+    linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+  background-size: 80px 80px, 40px 40px, 40px 40px;
   pointer-events: none;
 }
 
-/* ---------- 导航栏：深度丙烯酸 ---------- */
+/* ---------- 导航栏 ---------- */
 #nav {
-  background: rgba(6, 10, 20, 0.7) !important;
-  backdrop-filter: blur(32px) saturate(200%);
-  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  background: rgba(6, 10, 20, 0.75) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-bottom: 1px solid var(--glass-border) !important;
-  box-shadow: 0 1px 0 rgba(91, 156, 245, 0.08);
-  height: 56px;
-  transition: background 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
-}
-
-/* 导航栏：滚动后加深 */
-#nav.scrolled {
-  background: rgba(6, 10, 20, 0.88) !important;
-  box-shadow: 0 1px 0 rgba(91, 156, 245, 0.15), 0 4px 20px rgba(0,0,0,0.3);
+  height: 52px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 20px !important;
 }
 
 #nav .site-page,
 #nav #site-name {
   color: var(--text-secondary) !important;
   font-weight: 500;
-  font-size: 0.88rem;
-  letter-spacing: 0.8px;
-  transition: color 0.3s var(--ease-out);
+  font-size: 0.85rem;
+  letter-spacing: 0.6px;
+  transition: color 0.3s;
 }
+#nav .site-page:hover { color: #fff !important; }
+#nav #site-name { color: #fff !important; font-size: 1rem; font-weight: 700; letter-spacing: 1.5px; }
 
-#nav .site-page:hover {
-  color: var(--accent-glow) !important;
-}
+/* 隐藏搜索 */
+#nav #search-button { display: none !important; }
 
-#nav #site-name {
-  color: #fff !important;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 1.8px;
-}
-
-/* 菜单项激活指示器 */
+/* 导航下划线：中间向两边延展 */
+#nav .site-page { position: relative; }
 #nav .site-page::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: 2px;
   left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  width: 60%;
+  width: 70%;
   height: 2px;
   background: var(--accent);
-  transition: transform 0.3s var(--ease-spring);
+  border-radius: 1px;
+  transform: translateX(-50%) scaleX(0);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
 #nav .site-page:hover::after {
   transform: translateX(-50%) scaleX(1);
 }
 
 /* ---------- Hero 头部 ---------- */
 #page-header.full_page {
-  min-height: 70vh !important;
+  height: 35vh !important;
+  min-height: 35vh !important;
+  max-height: 35vh !important;
   background: transparent !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-/* Hero vignette 暗角 */
-#page-header.full_page::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(6,11,20,0.5) 100%);
-  pointer-events: none;
-  z-index: 1;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  overflow: hidden;
 }
 
 #site-info {
@@ -139,42 +124,19 @@ body {
 }
 
 #site-title {
-  font-size: 3.4rem !important;
+  font-size: 2.6rem !important;
   font-weight: 900 !important;
-  letter-spacing: 8px !important;
+  letter-spacing: 6px !important;
   color: #fff !important;
-  text-shadow:
-    0 0 80px rgba(140, 180, 255, 0.35),
-    0 0 160px rgba(100, 150, 255, 0.15),
-    0 2px 4px rgba(0,0,0,0.5);
-  margin-bottom: 14px;
-  animation: titleGlow 4s ease-in-out infinite;
-}
-
-@keyframes titleGlow {
-  0%, 100% { text-shadow: 0 0 80px rgba(140,180,255,0.35), 0 0 160px rgba(100,150,255,0.15), 0 2px 4px rgba(0,0,0,0.5); }
-  50% { text-shadow: 0 0 100px rgba(140,180,255,0.5), 0 0 200px rgba(100,150,255,0.25), 0 2px 4px rgba(0,0,0,0.5); }
+  text-shadow: 0 0 40px rgba(140,180,255,0.25);
+  margin-bottom: 8px;
 }
 
 #site-subtitle {
-  font-size: 1rem !important;
+  font-size: 0.9rem !important;
   color: var(--text-secondary) !important;
   letter-spacing: 2px;
   font-weight: 400;
-}
-
-/* Hero 装饰光晕 */
-#site-info::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(91,156,245,0.05) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: -1;
 }
 
 /* ---------- 文章卡片：深度丙烯酸 ---------- */

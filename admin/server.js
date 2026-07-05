@@ -227,6 +227,27 @@ app.put('/api/config', (req, res) => {
   res.json({ success: true, message: '配置已保存' });
 });
 
+// ── API: 开屏卡片配置 ────────────────────
+const LANDING_CONFIG_PATH = path.join(ROOT, 'source', 'landing-config.json');
+
+app.get('/api/landing-config', (req, res) => {
+  if (fs.existsSync(LANDING_CONFIG_PATH)) {
+    res.json(JSON.parse(fs.readFileSync(LANDING_CONFIG_PATH, 'utf-8')));
+  } else {
+    res.json({
+      cardImage: 'images/illustrations/card-1.jpg',
+      cardTitle: 'JINGYU',
+      cardSubtitle: 'GAMEDESIGN PORTFOLIO',
+      cardBadge: '作品集'
+    });
+  }
+});
+
+app.put('/api/landing-config', (req, res) => {
+  fs.writeFileSync(LANDING_CONFIG_PATH, JSON.stringify(req.body, null, 2), 'utf-8');
+  res.json({ success: true, message: '开屏卡片配置已保存' });
+});
+
 // ── API: Hexo 操作 ────────────────────────
 function runHexo(cmd) {
   return new Promise((resolve, reject) => {

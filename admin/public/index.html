@@ -728,9 +728,10 @@ async function uploadImages(files) {
 // ── 配置 Tab ──────────────────────────────
 async function renderConfig() {
   const cfg = await api.get('/api/config');
+  const landingCfg = await api.get('/api/landing-config');
   const el = document.getElementById('content');
   const actions = document.getElementById('toolbar-actions');
-  actions.innerHTML = '<button class="btn primary" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> 保存配置</button>';
+  actions.innerHTML = '<button class="btn primary" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> 保存全部配置</button>';
 
   el.innerHTML = `
     <div class="card">
@@ -745,6 +746,13 @@ async function renderConfig() {
     <div class="card">
       <div class="card-header"><i class="fa-solid fa-palette"></i> 主题设置</div>
       <div class="field"><label>默认显示模式</label><select id="cfg-display"><option ${cfg.theme.display_mode==='dark'?'selected':''}>dark</option><option ${cfg.theme.display_mode==='light'?'selected':''}>light</option></select></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-door-open"></i> 开屏卡片设置</div>
+      <div class="field"><label>卡片配图路径</label><input id="landing-img" value="${esc(landingCfg.cardImage || '')}"></div>
+      <div class="field"><label>卡片标题</label><input id="landing-title" value="${esc(landingCfg.cardTitle || '')}"></div>
+      <div class="field"><label>卡片副标题</label><input id="landing-subtitle" value="${esc(landingCfg.cardSubtitle || '')}"></div>
+      <div class="field"><label>卡片 Badge</label><input id="landing-badge" value="${esc(landingCfg.cardBadge || '')}"></div>
     </div>
   `;
 }
@@ -764,7 +772,16 @@ async function saveConfig() {
     }
   };
   await api.put('/api/config', data);
-  toast('配置已保存');
+
+  // 同时保存开屏卡片配置
+  const landingData = {
+    cardImage: document.getElementById('landing-img')?.value || '',
+    cardTitle: document.getElementById('landing-title')?.value || '',
+    cardSubtitle: document.getElementById('landing-subtitle')?.value || '',
+    cardBadge: document.getElementById('landing-badge')?.value || ''
+  };
+  await api.put('/api/landing-config', landingData);
+  toast('全部配置已保存');
 }
 
 // ── 部署 Tab ──────────────────────────────

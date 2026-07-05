@@ -965,12 +965,12 @@ css_prefix: true
 # Inject custom CSS and JS for game card aesthetic
 inject:
   head:
-    - <link rel="stylesheet" href="/css/game-card.css">
-    - <link rel="stylesheet" href="/css/landing.css">
+    - <link rel="stylesheet" href="./css/game-card.css">
+    - <link rel="stylesheet" href="./css/landing.css">
     - <script>document.documentElement.classList.add('landing-locked')</script>
   bottom:
-    - <script src="/js/landing.js"></script>
-    - <script src="/js/game-card.js"></script>
+    - <script src="./js/landing.js"></script>
+    - <script src="./js/game-card.js"></script>
 
 # CDN Settings
 # Don't modify the following settings unless you know how they work
